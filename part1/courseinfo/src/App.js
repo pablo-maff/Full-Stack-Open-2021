@@ -28,18 +28,39 @@ const App = () => {
     </div>
   )
 }
+
+NB: at this point you can assume that there are always three items,
+so there is no need to go through the arrays using loops.
+
+However, do not pass different objects as separate props from the App component
+to the components Content and Total. Instead, pass them directly as an array:
+
+const App = () => {
+  // const definitions
+
+  return (
+    <div>
+      <Header course={course} />
+      <Content parts={parts} />
+      <Total parts={parts} />
+    </div>
+  )
+}
 */
 
 import React from 'react'
 
 const Header = (props) => <h1>{props.title}</h1>
 
-const Part = (props) => {
-  return <p>{props.part.name} {props.part.exercises}</p>
+const Content = (props) => {
+  return [
+          <p>{props.parts[0].name} {props.parts[0].exercises}</p>,
+          <p>{props.parts[1].name} {props.parts[1].exercises}</p>,
+          <p>{props.parts[2].name} {props.parts[2].exercises}</p>
+  ]
 }
-const Total = (props) => {
-  return <p>Number of exercises {props.sum}</p>
-}
+const Total = (props) => <p>Number of exercises {props.sum[0].exercises + props.sum[1].exercises + props.sum[2].exercises}</p>
+
 
 const App = () => {
   const course = 'Half Stack Application Development'
@@ -61,10 +82,8 @@ const App = () => {
   return (
     <>
       <Header title={course} />
-      <Part part={parts[0]} />
-      <Part part={parts[1]} />
-      <Part part={parts[2]} />
-      <Total sum={parts[0].exercises + parts[1].exercises + parts[2].exercises}/>
+      <Content parts={parts} />
+      <Total sum={parts}/>
     </>
   )
 }
