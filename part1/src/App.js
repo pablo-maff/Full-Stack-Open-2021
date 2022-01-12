@@ -229,6 +229,7 @@ const Button = (props) => {
 // The Display component only uses the counter field of its props. This means we can simplify
 // the component by using DESTRUCTURING (https://fullstackopen.com/en/part1/component_state_event_handlers#destructuring)
 // Since this function only contains the return statement, we can define it using the more compact form of arrow functions:
+/*
 const Display = ({ counter }) => <div>{counter}</div>
 
 // With the Button component we can use destructuring to get only the required fields from props, and also use the more compact form of arrow functions:
@@ -237,13 +238,13 @@ const Button = ({ onClick, text}) => (
     {text}
   </button>
 )
-
+*/
 // Since now we have an easily reusable Button component, we've also implemented new
 // functionality into the app by adding a button that can be used to decrement the counter.
 
 // The name of the prop itslef is not that significant, but the choice wasn't completely random.
 // REACT'S OWN OFFICIAL TUTORIAL (https://reactjs.org/tutorial/tutorial.html) SUGGESTS THIS CONVENTION.
-
+/*
 const App = () => {
   const [ counter, setCounter ] = useState(0)
 
@@ -269,7 +270,7 @@ const App = () => {
     </>
   )
 }
-
+*/
 
 /* WRAPPING UP
 
@@ -286,5 +287,179 @@ So, if a user clicks the plus button, the button's event handler changes the val
 This causes its subcomponents Display and Button to also be re-rendered. Display receives the new value of the counter, 1, as props.
 The Button components receive event handlers which can be used to change the state of the counter.
 */
+
+
+// 1.D
+// A MORE COMPLEX STATE, DEBUGGING REACT APPS
+
+// To create an app that requires a more complex state than a single integer
+// in most cases the best way to do it is by using the useState function
+// multiple times to create separate "pieces of state". 
+/*
+const App = () => {
+  const [left, setLeft] = useState(0)
+  const [right, setRight] = useState(0)
+
+  return (
+    <div>
+      {left}
+      <button onClick={() => setLeft(left + 1)}>
+        left
+      </button>
+      <button onClick={() => setRight(right + 1)}>
+        right
+      </button>
+      {right}
+    </div>
+  )
+}
+*/
+
+// The component gets access to the functions setLEft and setRight that
+// it can use to update the two pieces of state.
+
+// The component's state or a piece of its state can be of any type. EG. A single object.
+// {left: 0, right: 0}
+/*
+const App = () => {
+  const [clicks, setClicks] = useState({
+    left:0, right: 0
+  })
+
+  const handleLeftClick = () => {
+    const newClicks = {
+      left: clicks.left + 1,
+      right: clicks.right
+    }
+    setClicks(newClicks)
+  }
+
+  const handleRightClick = () => {
+    const newClicks = {
+      left: clicks.left,
+      right: clicks.right + 1
+    }
+    setClicks(newClicks)
+  }
+
+  return (
+    <>
+      {clicks.left}
+      <button onClick={handleLeftClick}>left</button>
+      <button onClick={handleRightClick}>right</button>
+      {clicks.right}
+    </>
+  )
+}
+
+// Now the component only has a single piece of state and the event handlers
+// have to take care of changing the ENTIRE APPLICATION STATE.
+
+// To have the event handlers better organized, we can use the object spread syntax
+// (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax)
+
+  const handleLeftClick = () => {
+    const newClicks = {
+      ...clicks,
+      left: clicks.left + 1
+    }
+    setClicks(newClicks)
+  }
+
+  const handleRightClick = () => {
+    const newClicks = {
+      ...clicks,
+      right: clicks.right + 1
+    }
+    setClicks(newClicks)
+  }
+
+  // { ...clicks } creates a new object that has copies of all of the properties of the
+  // clicks object. When we specify a particular property - e.g. "right" in { ...clicks, right: 1 },
+  // the value of the "right" property in the new object will be 1.
+
+  // We don't need to assign the object to a variable in the event handler, we can simplfy it:
+
+  const handleLeftClick = () =>
+    setClicks({ ...clicks, left: clicks.left + 1})
+
+  const handleRightClick = () =>
+    setClicks({ ...clicks, right: clicks.right + 1})
+  
+  // IT IS FORBIDDEN IN REACT TO MUTATE STATE DIRECTLY:
+  const handleLeftClick = () => {
+    clicks.left ++ // Results in unexpected side effects.
+    setClicks(clicks)
+  }
+*/
+  // For this particular app is better to store the click counters into separate pieces of state.
+  // Storing it in one state would not give us any benefit and as a result, the app will be a lot more complex.
+  // There are situations where it can be beneficial to store a piece of application state in a more complex
+  // data structure. See the docs for some guidance on this topic (https://reactjs.org/docs/hooks-faq.html#should-i-use-one-or-many-state-variables)
+
+
+// --HANDLING ARRAYS--
+
+const History = (props) => {
+  if (props.allClicks.length === 0) {
+    return (
+      <div>
+        the app is used by pressing the buttons
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      button press history: {props.allClicks.join(' ')}
+    </div>
+  )
+}
+
+const Button = ({ handleClick, text }) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
+
+const App = () => {
+  const [left, setLeft] = useState(0)
+  const [right, setRight] = useState(0)
+  const [allClicks, setAll] = useState([])
+
+  const handleLeftClick = () => {
+    setAll(allClicks.concat('L'))
+    setLeft(left + 1)
+  }
+
+  const handleRightClick = () => {
+    setAll(allClicks.concat('R'))
+    setRight(right + 1)
+  }
+
+  return (
+    <div>
+      {left}
+      <Button handleClick={handleLeftClick} text='left' />
+      <Button handleClick={handleRightClick} text='right' />
+      {right}
+      <History allClicks={allClicks} />
+    </div>
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default App
