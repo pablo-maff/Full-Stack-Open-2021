@@ -8,11 +8,10 @@ const Button = ({ onClick, text }) => (
 )
 
 const StatisticLine = ({ text, value }) => (
-  <div>
-    {text}
-    {' '}
-    {value}
-  </div>
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 )
 
 const Stats = ({ clicks }) => {
@@ -22,23 +21,27 @@ const Stats = ({ clicks }) => {
 
   if (sumAll === 0) {
     return (
-      <div>
+      <>
         <h1>statistics</h1>
-        No feedback given
-      </div>
+        <p>No feedback given</p>
+      </>
     )
   }
 
   return  (
-  <div>
+  <>
     <h1>statistics</h1>
-    <StatisticLine text='good' value={clicks.good} />
-    <StatisticLine text='neutral' value={clicks.neutral} />
-    <StatisticLine text='bad' value={clicks.bad} />
-    <StatisticLine text='all' value={sumAll} />
-    <StatisticLine text='average' value={avgScore} />
-    <StatisticLine text='positive' value={positivePerc} />
-  </div>
+    <table>
+      <tbody>
+        <StatisticLine text='good' value={clicks.good} />
+        <StatisticLine text='neutral' value={clicks.neutral} />
+        <StatisticLine text='bad' value={clicks.bad} />
+        <StatisticLine text='all' value={sumAll} />
+        <StatisticLine text='average' value={avgScore} />
+        <StatisticLine text='positive' value={positivePerc} />
+      </tbody>
+    </table>
+  </>
   )
 }
 const App = () => {
