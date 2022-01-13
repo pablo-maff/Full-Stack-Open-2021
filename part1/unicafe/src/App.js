@@ -11,6 +11,16 @@ const Stats = (props) => {
   const sumAll = props.clicks.good + props.clicks.neutral + props.clicks.bad
   const avgScore = (props.clicks.good - props.clicks.bad) / sumAll
   const positivePerc = props.clicks.good / sumAll * 100 + ' %'
+
+  if (sumAll === 0) {
+    return (
+      <div>
+        <h1>statistics</h1>
+        No feedback given
+      </div>
+    )
+  }
+
   return  (
   <>
     <h1>statistics</h1>
