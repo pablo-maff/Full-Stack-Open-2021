@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-
+// Components
 const Button = ({ onClick, text }) => (
   <button onClick={onClick}>
     {text}
@@ -44,13 +44,15 @@ const Stats = ({ clicks }) => {
   </>
   )
 }
+
+
 const App = () => {
-  // save clicks of each button to its own state
+  // States
   const [clicks, setClicks] = useState({
     good: 0, neutral: 0, bad: 0
   })
  
-  // buttons event handling
+  // Handlers
   const handleGoodClick = () => 
     setClicks({ ...clicks, good: clicks.good + 1})
 
@@ -60,6 +62,7 @@ const App = () => {
   const handleBadClick = () => 
     setClicks({ ...clicks, bad: clicks.bad + 1})
 
+    
   return (
     <>
       <h1>give feedback</h1>
