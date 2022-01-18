@@ -1,17 +1,12 @@
 import React, { useState } from 'react'
 
-const DisplayPersons = ({ people }) => {
-  const peopleName = people.map(name => name.name)
-  return (
-    <>
-      {people.map(name =>
-        <div key={name.name}>
-          {name.name}
-        </div>
-      )}
-    </>
-    )
-}
+const DisplayPersons = ({ people }) => <>
+  {people.map(name =>
+    <div key={name.name}>
+      {name.name}
+    </div>
+  )}
+</>
 
 
 const App = () => {
@@ -20,11 +15,16 @@ const App = () => {
   ])
   const [newName, setNewName] = useState('')
 
+  const personsNames = persons.map(name => name.name)
+
   const addName = (event) => {
     event.preventDefault()
     const nameObject = {
       name: newName
     }
+    personsNames.includes(newName) ? 
+    alert(`${newName} is already added to phonebook`) 
+    : 
     setPersons(persons.concat(nameObject))
     setNewName('')
   }
@@ -49,7 +49,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <DisplayPersons people={persons}/>
+      <DisplayPersons people={persons} />
     </div>
   )
 }
