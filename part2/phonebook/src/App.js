@@ -1,43 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-
-
-const Persons = ({ numbers }) =>
-  <>
-    <h2>Numbers</h2>
-    {numbers.map(person =>
-      <p key={person.id}>
-        {person.name}: {person.number}
-      </p>)}
-  </>
-
-const Filter = ({ newFilter, handleFilter }) =>
-  <>
-    filter shown with <input
-      value={newFilter}
-      onChange={handleFilter}
-    />
-  </>
-
-const PersonForm = ({ newName, newNumber, handleName, handleNumber, addData }) => 
-<>
-  <h2>Add a new person</h2>
-  <form onSubmit={addData}>
-    <div>
-      name: <input
-        value={newName}
-        onChange={handleName}
-      /><br />
-      number: <input
-        value={newNumber}
-        onChange={handleNumber}
-      />
-    </div>
-    <div>
-      <button type="submit">add</button>
-    </div>
-  </form>
-</>
+import Persons from './components/Persons'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
+import phonebookService from './services/phonebook'
 
 
 const App = () => {
@@ -46,14 +12,15 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
 
-  // Get data with Effect Hook
+
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
+    phonebookService
+      .getAll()
+      .then(initialPhonebook => {
+      setPersons(initialPhonebook)
+    })
   }, [])
+
 
   const addData = (event) => {
     const personsNames = persons.map(name => name.name.toLowerCase())
@@ -65,9 +32,9 @@ const App = () => {
     event.preventDefault()
     personsNames.includes(newName.toLowerCase()) ?
       alert(`${newName} is already added to phonebook`)
-      : axios.post('http://localhost:3001/persons', nameObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+      : phonebookService.create(nameObject)
+      .then(returnedNote => {
+        setPersons(persons.concat(returnedNote))
         setNewName('')
         setNewNumber('')
       })
