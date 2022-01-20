@@ -65,9 +65,12 @@ const App = () => {
     event.preventDefault()
     personsNames.includes(newName.toLowerCase()) ?
       alert(`${newName} is already added to phonebook`)
-      : setPersons(persons.concat(nameObject))
+      : axios.post('http://localhost:3001/persons', nameObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
         setNewName('')
         setNewNumber('')
+      })
   }
 
   const handleNewName = (event) => setNewName(event.target.value)
