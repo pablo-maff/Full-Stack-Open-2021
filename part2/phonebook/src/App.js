@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
@@ -17,8 +16,8 @@ const App = () => {
     phonebookService
       .getAll()
       .then(initialPhonebook => {
-      setPersons(initialPhonebook)
-    })
+        setPersons(initialPhonebook)
+      })
   }, [])
 
 
@@ -26,18 +25,17 @@ const App = () => {
     const personsNames = persons.map(name => name.name.toLowerCase())
     const nameObject = {
       name: newName,
-      number: newNumber,
-      id: persons.length + 1
+      number: newNumber
     }
     event.preventDefault()
     personsNames.includes(newName.toLowerCase()) ?
       alert(`${newName} is already added to phonebook`)
       : phonebookService.create(nameObject)
-      .then(returnedNote => {
-        setPersons(persons.concat(returnedNote))
-        setNewName('')
-        setNewNumber('')
-      })
+        .then(returnedNote => {
+          setPersons(persons.concat(returnedNote))
+          setNewName('')
+          setNewNumber('')
+        })
   }
 
   const handleNewName = (event) => setNewName(event.target.value)
@@ -52,6 +50,15 @@ const App = () => {
       person.name.toLowerCase().includes(filter.toLowerCase())
     )
 
+  const deleteData = id => {
+    phonebookService.del(id)
+      .then(phonebookService.getAll()
+        .then(initialPhonebook => {
+          setPersons(initialPhonebook.filter(person =>
+            person.id !== id))
+        }))
+  }
+
 
   return (
     <div>
@@ -59,7 +66,7 @@ const App = () => {
       <Filter newFilter={filter} handleFilter={handleFilter} />
       <PersonForm newName={newName} handleName={handleNewName}
         newNumber={newNumber} handleNumber={handleNewNumber} addData={addData} />
-      <Persons numbers={filteredData} />
+      <Persons numbers={filteredData} request={deleteData} />
     </div>
   )
 }
