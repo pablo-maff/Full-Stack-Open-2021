@@ -20,17 +20,6 @@ const App = () => {
       })
   }, [])
 
-  const updateData = id => {
-    const person = persons.find(p => p.id === id)
-    const changedPhone = { ...person, number: newNumber }
-
-    phonebookService
-      .update(id, changedPhone)
-      .then(returnedPhone => {
-        setPersons(persons.map(person => person.id !== id ? person : returnedPhone))
-      })
-  }
-
   const addData = (event) => {
     const personsNames = persons.map(name => name.name.toLowerCase())
     const personsIds = persons.filter(person => person.name === newName)
@@ -51,11 +40,23 @@ const App = () => {
         })
   }
 
-  const handleNewName = (event) => setNewName(event.target.value)
+  const updateData = id => {
+    const person = persons.find(p => p.id === id)
+    const changedPhone = { ...person, number: newNumber }
 
-  const handleNewNumber = (event) => setNewNumber(event.target.value)
+    phonebookService
+      .update(id, changedPhone)
+      .then(returnedPhone => {
+        setPersons(persons.map(person => person.id !== id ? person : returnedPhone))
+      })
+  }
 
-  const handleFilter = (event) => setFilter(event.target.value)
+  const deleteData = id => {
+    phonebookService.del(id)
+      .then(setPersons(persons.filter(
+        person => person.id !== id
+        )))
+  }
 
   const filteredData = !filter
     ? persons
@@ -63,14 +64,11 @@ const App = () => {
       person.name.toLowerCase().includes(filter.toLowerCase())
     )
 
-  const deleteData = id => {
-    phonebookService.del(id)
-      .then(phonebookService.getAll()
-        .then(initialPhonebook => {
-          setPersons(initialPhonebook.filter(person =>
-            person.id !== id))
-        }))
-  }
+  const handleNewName = (event) => setNewName(event.target.value)
+
+  const handleNewNumber = (event) => setNewNumber(event.target.value)
+
+  const handleFilter = (event) => setFilter(event.target.value)
 
 
   return (
