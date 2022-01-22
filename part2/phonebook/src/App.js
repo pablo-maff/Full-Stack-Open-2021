@@ -11,7 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [successMessage, setSuccessMessage] = useState(null)
+  const [message, setMessage] = useState(null)
 
 
   useEffect(() => {
@@ -40,13 +40,15 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
-        .then(setSuccessMessage(
+        .then(() => {
+          setMessage(
           `Added ${newName}`
-        ))
-          .then(setTimeout(() => {
-            setSuccessMessage(null)
-          }, 5000
-          ))
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000
+        )
+      })
   }
 
   const updateData = id => {
@@ -58,13 +60,24 @@ const App = () => {
       .then(returnedPhone => {
       setPersons(persons.map(person => person.id !== id ? person : returnedPhone))
       })
-        .then(setSuccessMessage(
-          `Updated ${person.name}`
-        ))
-          .then(setTimeout(() => {
-            setSuccessMessage(null)
-          }, 5000
-          ))
+        .then(() => { 
+          setMessage(
+        `Updated ${person.name}`
+        )
+        setTimeout(success => {
+          setMessage(null)
+        }, 5000
+        )
+      })
+        .catch(() => {
+        setMessage(
+          `ERROR: Information of ${person.name} has already been removed from the server`
+        )
+        setTimeout(error => {
+          setMessage(null)
+        }, 5000
+        )
+      })
   }
 
   const deleteData = id => {
@@ -90,7 +103,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={successMessage} />
+      <Notification message={message} />
       <Filter newFilter={filter} handleFilter={handleFilter} />
       <PersonForm newName={newName} handleName={handleNewName}
         newNumber={newNumber} handleNumber={handleNewNumber} addData={addData} />
