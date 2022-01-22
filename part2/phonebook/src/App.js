@@ -20,16 +20,29 @@ const App = () => {
       })
   }, [])
 
+  const updateData = id => {
+    const person = persons.find(p => p.id === id)
+    const changedPhone = { ...person, number: newNumber }
+
+    phonebookService
+      .update(id, changedPhone)
+      .then(returnedPhone => {
+        setPersons(persons.map(person => person.id !== id ? person : returnedPhone))
+      })
+  }
 
   const addData = (event) => {
     const personsNames = persons.map(name => name.name.toLowerCase())
+    const personsIds = persons.filter(person => person.name === newName)
+      .map(id => id.id)
     const nameObject = {
       name: newName,
       number: newNumber
     }
     event.preventDefault()
     personsNames.includes(newName.toLowerCase()) ?
-      alert(`${newName} is already added to phonebook`)
+      window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      && updateData(...personsIds)
       : phonebookService.create(nameObject)
         .then(returnedNote => {
           setPersons(persons.concat(returnedNote))
