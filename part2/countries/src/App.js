@@ -3,9 +3,11 @@ import axios from 'axios'
 import Filter from './components/Filter'
 import Countries from './components/Countries'
 
+
 const App = () => {
   const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState('')
+  const [weather, setWeather] = useState('')
 
   useEffect(() => {
     axios
@@ -15,9 +17,7 @@ const App = () => {
       })
   }, [])
 
-
   const handleFilter = (event) => setFilter(event.target.value)
-
 
   const filteredData = !filter
     ? countries
@@ -30,7 +30,7 @@ const App = () => {
     <>
       <h1>Countries</h1>
       <Filter newFilter={filter} handleFilter={handleFilter} />
-      <Countries countries={filteredData} setFilter={setFilter} />
+      <Countries countries={filteredData} setFilter={setFilter} weather={weather} setWeather={setWeather} />
     </>
   )
 }

@@ -1,3 +1,5 @@
+import React from 'react'
+
 const Filter = ({ newFilter, handleFilter }) =>
   <>
     find countries <input
