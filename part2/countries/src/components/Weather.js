@@ -1,16 +1,6 @@
-import React, { useEffect } from 'react'
-import axios from 'axios'
 
-const api_key = process.env.REACT_APP_API_KEY
+const Weather = ({ city, weather }) => {
 
-
-const Weather = ({ city, weather, setWeather }) => {
-    {useEffect(() => {
-        axios
-        .get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${api_key}`)
-        .then(response => setWeather(response.data))}
-        , [])}
-        
     if (!!weather) {    
     const getWeatherIcon = `http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`
     const windSpeed = (Math.round((weather.wind.speed * 3.6) * 100) / 100).toFixed(2)

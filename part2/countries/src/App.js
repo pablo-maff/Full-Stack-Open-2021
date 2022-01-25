@@ -7,7 +7,6 @@ import Countries from './components/Countries'
 const App = () => {
   const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState('')
-  const [weather, setWeather] = useState('')
 
   useEffect(() => {
     axios
@@ -30,7 +29,7 @@ const App = () => {
     <>
       <h1>Countries</h1>
       <Filter newFilter={filter} handleFilter={handleFilter} />
-      <Countries countries={filteredData} setFilter={setFilter} weather={weather} setWeather={setWeather} />
+      <Countries countries={filteredData} setFilter={setFilter} />
     </>
   )
 }
