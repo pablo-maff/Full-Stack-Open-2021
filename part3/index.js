@@ -1,3 +1,4 @@
+const { response } = require('express')
 const express = require('express')
 const app = express()
 
@@ -57,13 +58,29 @@ const generateRandomId = (min=1, max=9999) => {
 }
 
 app.post('/api/persons', (req, res) => {
-  const person = req.body
-  person.id = generateRandomId()
+  const personsNames = persons.map(name => name.name.toLowerCase())
+  const errorHandler = (message) => {
+    return res.status(400).json({
+      error: message
+    })
+  }
+
+  const body = req.body
   
-  console.log(person);
+  const person = {
+    "id": generateRandomId(),
+    "name": body.name || errorHandler('Person must have a name.'),
+    "number": body.number || errorHandler('Person must have a phone number.'),
+  }
+  
+  if (personsNames.includes(body.name.toLowerCase())) {
+    return errorHandler(`${body.name} is already registered in the phonebook.`)
+  }
+
   persons = persons.concat(person)
   res.json(person)
 })
+
 
 const PORT = 3001
 app.listen(PORT, () => {
