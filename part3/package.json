@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/pablo-maff/Full-Stack-Open-2021#readme",
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
