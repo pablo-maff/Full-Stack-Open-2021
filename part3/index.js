@@ -3,7 +3,9 @@ const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
-app.use(morgan('tiny'))
+
+morgan.token('person', req => JSON.stringify(req.body))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person'))
 
 
 let persons = [
@@ -61,7 +63,7 @@ const generateRandomId = (min=1, max=9999) => {
 
 app.post('/api/persons', (req, res) => {
   const personsNames = persons.map(name => name.name.toLowerCase())
-  const errorHandler = (message) => {
+  const errorHandler = message => {
     return res.status(400).json({
       error: message
     })
