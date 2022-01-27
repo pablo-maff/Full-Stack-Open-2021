@@ -1,8 +1,10 @@
 const express = require('express')
 const morgan = require('morgan')
 const app = express()
+const cors = require('cors')
 
 app.use(express.json())
+app.use(cors())
 
 morgan.token('person', req => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :person'))
@@ -77,8 +79,8 @@ app.post('/api/persons', (req, res) => {
     "number": body.number || errorHandler('Person must have a phone number.'),
   }
   
-  if (personsNames.includes(body.name.toLowerCase())) {
-    return errorHandler(`${body.name} is already registered in the phonebook.`)
+  if (personsNames.includes(person.name.toLowerCase())) {
+    return errorHandler(`${person.name} is already registered in the phonebook.`)
   }
 
   persons = persons.concat(person)
