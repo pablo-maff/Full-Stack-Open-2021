@@ -26,7 +26,7 @@ const Country = ({ country }) => {
         <img src={country.flags.png} alt='flag' />
       </div>
     )}
-      <Weather city={country[0].capital} weather={weather} />
+      <Weather city={city} weather={weather} />
     </>
   )
 }
