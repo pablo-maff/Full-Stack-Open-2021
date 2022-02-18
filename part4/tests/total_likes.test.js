@@ -1,3 +1,4 @@
+const { describe } = require('eslint/lib/rule-tester/rule-tester')
 const listHelper = require('../utils/list_helper')
 
 
@@ -49,5 +50,12 @@ describe('Total Likes', () => {
     const listWithManyBlogs = blogs.map(e => e.likes)
     const result = listHelper.totalLikes(listWithManyBlogs)
     expect(result).toBe(230)
+  })
+})
+
+describe('Favourite Blog', () => {
+  test('is the one with most likes', () => {
+    const result = listHelper.favouriteBlog(blogs)
+    expect(result).toEqual(blogs[3])
   })
 })
