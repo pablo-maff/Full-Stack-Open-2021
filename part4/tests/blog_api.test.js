@@ -13,7 +13,7 @@ beforeEach(async () => {
     .map(blog => new Blog(blog))
   const promiseArray = blogObject.map(blog => blog.save())
   await Promise.all(promiseArray)
-})
+}, 1000000)
 
 test('blogs are returned as json', async () => {
   await api
@@ -28,6 +28,11 @@ test('all blogs are returned', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
+test.only('identifier is named "id"', async() => {
+  const request = await api.post('/api/blogs', helper.nonExistingId())
+  
+  expect(request.body.id).toBeDefined()
+})
 
 afterAll(() => {
   mongoose.connection.close()
