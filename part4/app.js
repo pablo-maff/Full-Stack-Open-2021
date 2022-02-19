@@ -1,20 +1,21 @@
 const { MONGODB_URI } = require('./utils/config')
 const express = require('express')
+require('express-async-errors')
 const app = express()
 const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
-const { info, error } = require('./utils/logger')
+const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
-info('connecting to', MONGODB_URI)
+logger.info('connecting to', MONGODB_URI)
 
 mongoose.connect(MONGODB_URI)
   .then(() => {
-    info('Connected to MongoDB')
+    logger.info('Connected to MongoDB')
   })
   .catch(error => {
-    error('Error connecting to MongDB:', error.message)
+    logger.error('Error connecting to MongoDB:', error.message)
   })
 
 app.use(cors())
