@@ -130,7 +130,6 @@ describe('Viewing a specific blog', () => {
 
   test('fails with statuscode 404 if blog does not exist', async () => {
     const validNonExistingId = await helper.nonExistingId()
-    console.log(validNonExistingId)
 
     await api
       .get(`/api/blogs/${validNonExistingId}`)
@@ -142,6 +141,45 @@ describe('Viewing a specific blog', () => {
 
     await api
       .get(`/api/blogs/${invalidId}`)
+      .expect(400)
+  })
+})
+
+describe('Updating a blog', () => {
+  test('succeed with statuscode 200 if blog is succesfully updated', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    blogToUpdate.likes = 23
+
+    const resultBlog = await api
+      .put(`/api/blogs/${blogToUpdate.id}`).send(blogToUpdate)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toContainEqual(resultBlog.body)
+  })
+
+  test('fails with statuscode 404 if blog does not exist', async () => {
+    const validNonExistingId = await helper.nonExistingId()
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    blogToUpdate.likes = 23
+
+    await api
+      .put(`/api/blogs/${validNonExistingId}`).send(blogToUpdate)
+      .expect(404)
+  })
+
+  test('fails with statuscode 400 if id is invalid', async () => {
+    const invalidId = '5a3d5da59070081a82a3445'
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    blogToUpdate.likes = 23
+
+    await api
+      .put(`/api/blogs/${invalidId}`).send(blogToUpdate)
       .expect(400)
   })
 })
