@@ -54,6 +54,16 @@ describe('Adding a new blog post', () => {
     delete blogs.at(-1).id
     expect(blogs).toContainEqual(helper.postNewBlog)
   })
+
+  test.only('if likes property is missing, default value is 0', async () => {
+    let toPost = helper.postNewBlog
+    delete toPost.likes
+    await api.post('/api/blogs').send(toPost)
+      .expect(201)
+    
+    const blogs = await helper.blogsInDb()
+    expect(blogs.at(-1)).toHaveProperty('likes', 0)
+  })
 })
 afterAll(() => {
   mongoose.connection.close()
