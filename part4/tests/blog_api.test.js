@@ -4,6 +4,7 @@ const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const { describe } = require('eslint/lib/rule-tester/rule-tester')
 
 
 beforeEach(async () => {
@@ -13,27 +14,47 @@ beforeEach(async () => {
     .map(blog => new Blog(blog))
   const promiseArray = blogObject.map(blog => blog.save())
   await Promise.all(promiseArray)
-}, 1000000)
+})
 
-test('blogs are returned as json', async () => {
+xtest('blogs are returned as json', async () => {
   await api
     .get('/api/blogs')
     .expect(200)
     .expect('Content-Type', /application\/json/)
 })
 
-test('all blogs are returned', async () => {
+xtest('all blogs are returned', async () => {
   const response = await api.get('/api/blogs')
+    .expect(200)
 
   expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
-test.only('identifier is named "id"', async() => {
-  const request = await api.post('/api/blogs', helper.nonExistingId())
-  
+xtest('identifier is named "id"', async () => {
+  const request = await api.post('/api/blogs').send(helper.nonExistingId())
+    .expect(201)
+
   expect(request.body.id).toBeDefined()
 })
 
+describe('Adding a new blog post', () => {
+  test('is succesfully created', async () => {
+    await api.post('/api/blogs').send(helper.postNewBlog)
+      .expect(201)
+    
+    expect(await helper.blogsInDb()).toHaveLength(helper.initialBlogs.length + 1)
+  })
+
+  test('saves its content', async () => {
+    await api.post('/api/blogs').send(helper.postNewBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogs = await helper.blogsInDb()
+    delete blogs.at(-1).id
+    expect(blogs).toContainEqual(helper.postNewBlog)
+  })
+})
 afterAll(() => {
   mongoose.connection.close()
 })
