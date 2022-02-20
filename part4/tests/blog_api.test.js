@@ -55,14 +55,24 @@ describe('Adding a new blog post', () => {
     expect(blogs).toContainEqual(helper.postNewBlog)
   })
 
-  test.only('if likes property is missing, default value is 0', async () => {
+  test('if likes property is missing, default value is 0', async () => {
     let toPost = helper.postNewBlog
     delete toPost.likes
+    
     await api.post('/api/blogs').send(toPost)
       .expect(201)
     
     const blogs = await helper.blogsInDb()
     expect(blogs.at(-1)).toHaveProperty('likes', 0)
+  })
+
+  test.only('if title and url properties are missing, return 400 Bad Request', async () => {
+    let toPost = helper.postNewBlog
+    delete toPost.title
+    delete toPost.url
+
+    await api.post('/api/blogs').send(toPost)
+      .expect(400)
   })
 })
 afterAll(() => {
