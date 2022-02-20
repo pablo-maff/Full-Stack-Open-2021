@@ -23,11 +23,11 @@ const postNewBlog = {
 }
 
 const nonExistingId = async () => {
-  const blog = new Blog({ title: 'willremovethissoon' })
+  const blog = new Blog({ content: 'willremovethissoon'})
   await blog.save()
   await blog.remove()
 
-  return blog.id.toString()
+  return blog._id.toString()
 }
 
 const blogsInDb = async () => {
@@ -36,5 +36,5 @@ const blogsInDb = async () => {
 }
 
 module.exports = {
-  initialBlogs, nonExistingId, blogsInDb, postNewBlog
+  initialBlogs, blogsInDb, nonExistingId, postNewBlog
 }
