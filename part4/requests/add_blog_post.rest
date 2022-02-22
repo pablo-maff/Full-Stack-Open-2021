@@ -2,8 +2,9 @@ POST http://localhost:3003/api/blogs/
 Content-Type: application/json
 
 {
-"title": "cuadruple Amazing blog post",
-"author": "cuadruple Amazing author",
-"url": "https://amazingblog.com/blog/cuadruple-amazing-post",
-"likes": 126
+"title": "Third Blog post with owner",
+"author": "Third Owner",
+"url": "https://thirdrownedblog.com/blog/ownedpost",
+"likes": 12,
+"user": ""
 }
