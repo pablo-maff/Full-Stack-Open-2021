@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5vblNlbnNlUG9ldHJ5IiwiaWQiOiI2MjE0Y2YzNWQ2Mjg0OGQzNTg4ZjI0ZWEiLCJpYXQiOjE2NDU1MzQyNzR9.ERLYyhsRiQB6fqsA0wYb_zyppCcuWJa2g6rNleJRCq4
 
 {
-"title": "Third Blog post with owner",
-"author": "Third Owner",
-"url": "https://thirdrownedblog.com/blog/ownedpost",
-"likes": 12,
-"user": ""
+"title": "Another User Token Authorized Blog post",
+"author": "AnotherToken Authorization: ",
+"url": "https://anothertoken.com/blog/token-authorized",
+"likes": 12
 }
