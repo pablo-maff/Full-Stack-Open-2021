@@ -164,7 +164,6 @@ describe('Updating a blog', () => {
     const validNonExistingId = await helper.nonExistingId()
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[0]
-    blogToUpdate.likes = 23
 
     await api
       .put(`/api/blogs/${validNonExistingId}`).send(blogToUpdate)
@@ -175,7 +174,6 @@ describe('Updating a blog', () => {
     const invalidId = '5a3d5da59070081a82a3445'
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[0]
-    blogToUpdate.likes = 23
 
     await api
       .put(`/api/blogs/${invalidId}`).send(blogToUpdate)

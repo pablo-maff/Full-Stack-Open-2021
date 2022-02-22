@@ -41,6 +41,31 @@ const usersInDb = async () => {
   return users.map(u => u.toJSON())
 }
 
+const initialUsers = [
+  {
+    username: 'root',
+    name: 'root user',
+    password: 'rootpass',
+  },
+  {
+    username: 'pmaff',
+    name: 'Pablo Maffioli',
+    password: 'pabpass',
+  }
+]
+
+const postNewUser = {
+  username: 'nonSensePoetry',
+  name: 'Edward Lear',
+  password: 'Pobble',
+}
+
 module.exports = {
-  initialBlogs, blogsInDb, nonExistingId, postNewBlog, usersInDb
+  initialBlogs,
+  blogsInDb,
+  nonExistingId,
+  postNewBlog,
+  usersInDb,
+  initialUsers,
+  postNewUser
 }
