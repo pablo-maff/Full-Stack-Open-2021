@@ -9,6 +9,9 @@ const loginRouter = require('./controllers/login')
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
+const morgan = require('morgan')
+
+morgan.token('blog', req => JSON.stringify(req.body))
 
 logger.info('connecting to', MONGODB_URI)
 
@@ -23,7 +26,8 @@ mongoose.connect(MONGODB_URI)
 app.use(cors())
 app.use(express.json())
 
-app.use(middleware.requestLogger)
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :blog'))
+
 app.use(middleware.tokenExtractor)
 
 app.use('/api/users', usersRouter)
