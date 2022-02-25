@@ -1,4 +1,6 @@
 const logger = require('./logger')
+const jwt = require('jsonwebtoken')
+
 
 const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'Unknwonw endpoint' })
@@ -32,7 +34,12 @@ const errorHandler = (error, req, res, next) => {
 const tokenExtractor = (req, res, next) => {
   const authorization = req.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    req.token = authorization.substring(7)
+    const token = authorization.substring(7)
+    
+    req.token = jwt.verify(token, process.env.SECRET) // Verify token validity and decode token (returns the Object which the token was based on)
+    if (!req.token.id) {
+      return res.status(401).json({ error: 'Token missing or invalid'})
+    }
     
     next()
   } else next()

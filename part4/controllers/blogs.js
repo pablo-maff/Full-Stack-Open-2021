@@ -1,7 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 
 // const getTokenFrom = req => {
 //   const authorization = req.get('authorization')
@@ -34,13 +33,7 @@ blogsRouter.post('/', async (req, res) => {
     res.status(400).end()
   }
 
-  const decodedToken = jwt.verify(req.token, process.env.SECRET) // Verify token validity and decode token (returns the Object which the token was based on)
-
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: 'Token missing or invalid'})
-  }
-
-  const user = await User.findById(decodedToken.id)
+  const user = await User.findById(req.token.id)
 
   const blog = new Blog ({
     title,
@@ -58,8 +51,16 @@ blogsRouter.post('/', async (req, res) => {
 })
 
 blogsRouter.delete('/:id', async (req, res) => {
-  await Blog.findByIdAndRemove(req.params.id)
-  res.status(204).end()
+  const blog = await Blog.findById(req.params.id)
+  const authorId = blog.user.toString()
+  const tokenId = req.token.id
+
+  if (authorId === tokenId) {
+    await Blog.findByIdAndRemove(req.params.id)
+    res.status(204).end() 
+  }
+  else res.status(401).send({ error: 'You are not allowed to delete someone else\'s blogs' })
+
 })
 
 blogsRouter.put('/:id', async (req, res) => {
