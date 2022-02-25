@@ -1,14 +1,7 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
+const { userExtractor, blogExtractor } = require('../utils/middleware')
 
-// const getTokenFrom = req => {
-//   const authorization = req.get('authorization')
-//   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-//     return authorization.substring(7)
-//   }
-//   return null
-// }
 
 blogsRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({})
@@ -26,36 +19,35 @@ blogsRouter.get('/:id', async (req, res) => {
     : res.status(404).end()
 })
 
-blogsRouter.post('/', async (req, res) => {
+blogsRouter.post('/', userExtractor, async (req, res) => {
   const { title, author, url, likes } = req.body
   
   if (!title && !url) {
     res.status(400).end()
   }
 
-  const user = await User.findById(req.token.id)
+  const user = req.user
 
   const blog = new Blog ({
     title,
     author,
     url,
     likes,
-    user: user._id
+    user: user.id
   })
 
   const savedPost = await blog.save()
-  user.blogs = user.blogs.concat(savedPost._id)
+  user.blogs = user.blogs.concat(savedPost.id)
   await user.save()
 
   res.status(201).json(savedPost)
 })
 
-blogsRouter.delete('/:id', async (req, res) => {
-  const blog = await Blog.findById(req.params.id)
-  const authorId = blog.user.toString()
-  const tokenId = req.token.id
+blogsRouter.delete('/:id', blogExtractor, async (req, res) => {
+  const authorId = req.blog.user.toString()
+  const userId = req.token.id
 
-  if (authorId === tokenId) {
+  if (authorId === userId) {
     await Blog.findByIdAndRemove(req.params.id)
     res.status(204).end() 
   }

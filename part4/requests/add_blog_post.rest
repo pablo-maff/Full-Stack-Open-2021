@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5vblNlbnNlUG9ldHJ5IiwiaWQiOiI2MjE0Y2YzNWQ2Mjg0OGQzNTg4ZjI0ZWEiLCJpYXQiOjE2NDU4MDg0MDUsImV4cCI6MTY0NTgxMjAwNX0.4pTYMoe2MLaZWxyTJVg_eG9GkQmfz5Y1cM_NNiG_-eM
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5vblNlbnNlUG9ldHJ5IiwiaWQiOiI2MjE0Y2YzNWQ2Mjg0OGQzNTg4ZjI0ZWEiLCJpYXQiOjE2NDU4MTIzNDMsImV4cCI6MTY0NTgxNTk0M30.gWrkzatdGMbcAbTl-xZbgk9bsP_oe-2MkJ1ogIhk4_c
 
 {
 "title": "Middleware Blog post",
