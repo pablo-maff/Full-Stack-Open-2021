@@ -1,22 +1,34 @@
 const mongoose = require('mongoose')
+//import { agent as supertest } from 'supertest'
 const supertest = require('supertest')
 const helper = require('./test_helper')
 const app = require('../app')
-const api = supertest(app)
 const Blog = require('../models/blog')
 
 
+const api = supertest.agent(app)
+
+beforeAll(async () => {
+  const response = await api.post(
+    '/api/login').send({
+    username: 'pmaff',
+    password: 'pabpass'
+  })
+  api.auth(response.body.token, { type: 'bearer' })
+})
+
 beforeEach(async () => {
   await Blog.deleteMany({})
-  await Blog.insertMany(helper.initialBlogs)
-/*
-  INSERT BLOGS MANUALLY
+
   const blogObject = helper.initialBlogs
-    .map(blog => new Blog(blog))
-  const promiseArray = blogObject.map(blog => blog.save())
+  const promiseArray = blogObject.map(
+    blog => api.post(
+      '/api/blogs')
+      .send(blog)
+  )
   await Promise.all(promiseArray)
-*/
 })
+
 describe('When there are blogs already saved', () => {
   test('blogs are returned as json', async () => {
     await api
@@ -56,6 +68,7 @@ describe('Adding a new blog post', () => {
 
     const blogs = await helper.blogsInDb()
     delete blogs.at(-1).id
+    delete blogs.at(-1).user
     expect(blogs).toContainEqual(helper.postNewBlog)
   })
 
@@ -84,7 +97,6 @@ describe('Deleting a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
-
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
       .expect(204)
@@ -115,16 +127,16 @@ describe('Deleting a blog', () => {
 describe('Viewing a specific blog', () => {
   test('succeeds if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
-    const blogToView = blogsAtStart[0]
+    const blogToView = { ...blogsAtStart[0], user: blogsAtStart[0].user.toString() }
 
-    const resultBlog = await api
+    const reqBlog = await api
       .get(`/api/blogs/${blogToView.id}`)
       .expect(200)
       .expect('Content-Type', /application\/json/)
     
-    const blogsAtEnd = await helper.blogsInDb()
+    const resBlog = { ...reqBlog.body, user: reqBlog.body.user.toString() }
 
-    expect(blogsAtEnd).toContainEqual(resultBlog.body)
+    expect(blogToView).toEqual(resBlog)
   })
 
   test('fails with statuscode 404 if blog does not exist', async () => {
@@ -147,17 +159,19 @@ describe('Viewing a specific blog', () => {
 describe('Updating a blog', () => {
   test('succeed with statuscode 200 if blog is succesfully updated', async () => {
     const blogsAtStart = await helper.blogsInDb()
-    const blogToUpdate = blogsAtStart[0]
-    blogToUpdate.likes = 23
+    const blogToUpdate = { ...blogsAtStart[0], 
+      user: blogsAtStart[0].user.toString(),
+      likes: 23 }
 
-    const resultBlog = await api
+    await api
       .put(`/api/blogs/${blogToUpdate.id}`).send(blogToUpdate)
       .expect(200)
       .expect('Content-Type', /application\/json/)
     
     const blogsAtEnd = await helper.blogsInDb()
+    const updatedBlog = { ...blogsAtEnd[0], user: blogsAtStart[0].user.toString() } 
 
-    expect(blogsAtEnd).toContainEqual(resultBlog.body)
+    expect(updatedBlog).toEqual(blogToUpdate)
   })
 
   test('fails with statuscode 404 if blog does not exist', async () => {
