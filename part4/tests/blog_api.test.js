@@ -196,14 +196,24 @@ describe('Updating a blog', () => {
   })
 })
 
-describe('Counters', () => {
-  test.only('Author with most blogs', async () => {
+describe('Author', () => {
+  test('with most blogs', async () => {
     const blogs = await helper.blogsInDb()
     const mostBlogs = helper.mostBlogs(blogs)
 
     expect(mostBlogs).toMatchObject({
       author: 'Dummy author',
       blogs: 2
+    })
+  })
+
+  test('with most likes', async () => {
+    const blogs = await helper.blogsInDb()
+    const mostLikes = helper.mostLikes(blogs)
+
+    expect(mostLikes).toMatchObject({
+      author: 'Dummy author',
+      likes: 12
     })
   })
 })
