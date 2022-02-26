@@ -67,8 +67,18 @@ const postNewUser = {
   password: 'Pobble',
 }
 
-const mostBlogs = (blogs) => _.countBy(initialBlogs, 'author')
+const mostBlogs = (blogs) => {
+  const topAuthor = _.chain(blogs)
+    .groupBy('author')
+    .map((group, author) => {
+      return { author: author, blogs: group.length }
+    })
+    .maxBy((object) => object.blogs)
+    .value()
 
+  return topAuthor
+
+}
 
 module.exports = {
   initialBlogs,

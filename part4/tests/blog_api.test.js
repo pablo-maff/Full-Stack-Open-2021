@@ -197,13 +197,17 @@ describe('Updating a blog', () => {
 })
 
 describe('Counters', () => {
-  test('Author with most blogs', async () => {
+  test.only('Author with most blogs', async () => {
     const blogs = await helper.blogsInDb()
     const mostBlogs = helper.mostBlogs(blogs)
 
-    expect(Object.keys(mostBlogs)[0]).toBe('Dummy author')
+    expect(mostBlogs).toMatchObject({
+      author: 'Dummy author',
+      blogs: 2
+    })
   })
 })
+
 afterAll(() => {
   mongoose.connection.close()
 })
