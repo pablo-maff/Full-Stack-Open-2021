@@ -1,5 +1,6 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const _ = require('lodash')
 
 const initialBlogs = [
   {
@@ -13,6 +14,12 @@ const initialBlogs = [
     author: 'Second dummy author',
     url: 'https://dummy2.com',
     likes: 10
+  },
+  {
+    title: 'Third Dummy',
+    author: 'Dummy author',
+    url: 'https://dummy3.com',
+    likes: 7
   }
 ]
 
@@ -60,6 +67,9 @@ const postNewUser = {
   password: 'Pobble',
 }
 
+const mostBlogs = (blogs) => _.countBy(initialBlogs, 'author')
+
+
 module.exports = {
   initialBlogs,
   blogsInDb,
@@ -67,5 +77,6 @@ module.exports = {
   postNewBlog,
   usersInDb,
   initialUsers,
-  postNewUser
+  postNewUser,
+  mostBlogs
 }

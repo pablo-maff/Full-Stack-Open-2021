@@ -4,6 +4,7 @@ const supertest = require('supertest')
 const helper = require('./test_helper')
 const app = require('../app')
 const Blog = require('../models/blog')
+const { describe } = require('eslint/lib/rule-tester/rule-tester')
 
 
 const api = supertest.agent(app)
@@ -192,6 +193,15 @@ describe('Updating a blog', () => {
     await api
       .put(`/api/blogs/${invalidId}`).send(blogToUpdate)
       .expect(400)
+  })
+})
+
+describe('Counters', () => {
+  test('Author with most blogs', async () => {
+    const blogs = await helper.blogsInDb()
+    const mostBlogs = helper.mostBlogs(blogs)
+
+    expect(Object.keys(mostBlogs)[0]).toBe('Dummy author')
   })
 })
 afterAll(() => {
