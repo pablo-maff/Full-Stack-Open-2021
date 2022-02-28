@@ -13,7 +13,6 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const [notification, setNotification] = useState(null)
-  const [addBlogVisible, setAddBlogVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -122,9 +121,7 @@ const App = () => {
   ))
 
   const createBlogForm = () => {
-    const hideWhenVisible = { display: addBlogVisible ? 'none' : ''}
-    const showWhenVisible = { display: addBlogVisible ? '' : 'none'}
-
+    
     return (
       <>
         <div style={hideWhenVisible}>
