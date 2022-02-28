@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -34,6 +35,14 @@ const App = () => {
     setTimeout(() => {
       setNotification(null)
     }, 5000)
+  }
+
+  const handleUsernameChange = event => {
+    setUsername(event.target.value)
+  }
+
+  const handlePasswordChange = event => {
+    setPassword(event.target.value)
   }
 
   const handleLogin = async event => {
@@ -107,30 +116,6 @@ const App = () => {
     )
   }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-        <div>
-          username
-            <input
-            type='text'
-            value={username}
-            name='Username'
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-            <input
-            type='password'
-            value={password}
-            name='Password'
-            onChange={({ target }) => setPassword(target.value)}  
-          />
-        </div>
-        <button type='submit'>login</button>
-      </form>
-  )
-
   const getBlogs = () => (
     blogs.map(blog =>
       <Blog key={blog.id} blog={blog} />
@@ -184,9 +169,13 @@ const App = () => {
   if (user === null) {
     return (
     <>
-      <h1>Log in to Application</h1>
       <Notification notification={notification}/>
-        {loginForm()}
+      <LoginForm handleLogin={handleLogin} 
+        handleUsernameChange={handleUsernameChange}
+        handlePasswordChange={handlePasswordChange}
+        username={username}
+        password={password}
+      />
     </>
     )
   }
