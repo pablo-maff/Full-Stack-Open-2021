@@ -11,6 +11,7 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -26,6 +27,13 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const notify = (message, type='info') => {
+    setNotification({ message, type })
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
 
   const handleLogin = async event => {
     event.preventDefault()
@@ -45,7 +53,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log(exception);
+      notify('Wrong Username or Password', 'alert')
     }
   }
 
@@ -65,13 +73,36 @@ const App = () => {
         url
       })
 
+      setBlogs(blogs.concat(newBlog))
+      notify(`A new blog ${title} by ${author} added`)
       setTitle('')
       setAuthor('')
       setUrl('')
-      setBlogs(blogs.concat(newBlog))
     } catch (exception) {
-      console.log(exception);
+      notify('Title must be provided', 'alert')
     }
+  }
+
+  const Notification = ({ notification }) => {
+    if (notification === null) {
+      return null
+    }
+
+    const style = {
+      color: notification.type === 'alert' ? 'red' : 'green',
+      background: 'lightgrey',
+      fontSize: 20,
+      borderStyle: 'solid',
+      borderRadius: 5,
+      padding: 10,
+      marginBottom: 10
+    }
+
+    return (
+      <div style={style}>
+        {notification.message}
+      </div>
+    )
   }
 
   const loginForm = () => (
@@ -140,6 +171,7 @@ const App = () => {
     return (
     <>
       <h1>Log in to Application</h1>
+      <Notification notification={notification}/>
         {loginForm()}
     </>
     )
@@ -148,6 +180,7 @@ const App = () => {
   return (      
     <div>
       <h1>Blogs</h1>
+      <Notification notification={notification}/>
       <p>{user.name} logged-in</p>
       <button onClick={handleLogout}>logout</button>
       <h2>Create New</h2>
