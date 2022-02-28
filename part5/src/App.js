@@ -12,6 +12,7 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const [notification, setNotification] = useState(null)
+  const [addBlogVisible, setAddBlogVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -61,6 +62,7 @@ const App = () => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
+    setAddBlogVisible(false)
   }
 
   const handleNewBlog = async event => {
@@ -134,38 +136,50 @@ const App = () => {
       <Blog key={blog.id} blog={blog} />
   ))
 
-  const createBlogForm = () => (
-    <form onSubmit={handleNewBlog}>
-      <div>
-        Title:
-        <input
-        type='title'
-        value={title}
-        name='Title'
-        onChange={({ target }) => setTitle(target.value)}
-        />
-      </div>
-      <div>
-        Author:
-        <input
-        type='author'
-        value={author}
-        name='Author'
-        onChange={({ target }) => setAuthor(target.value)}
-        />
-      </div>
-      <div>
-        URL:
-        <input
-        type='url'
-        value={url}
-        name='URL'
-        onChange={({ target }) => setUrl(target.value)}
-        />
-      </div>
-      <button type='submit'>Create</button>
-    </form>
-  )
+  const createBlogForm = () => {
+    const hideWhenVisible = { display: addBlogVisible ? 'none' : ''}
+    const showWhenVisible = { display: addBlogVisible ? '' : 'none'}
+
+    return (
+      <>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setAddBlogVisible(true)}>New Blog</button>
+        </div>
+        <div style={showWhenVisible}>
+          <form onSubmit={handleNewBlog}>
+            <div>
+              Title:
+              <input
+              type='title'
+              value={title}
+              name='Title'
+              onChange={({ target }) => setTitle(target.value)}
+              />
+            </div>
+            <div>
+              Author:
+              <input
+              type='author'
+              value={author}
+              name='Author'
+              onChange={({ target }) => setAuthor(target.value)}
+              />
+            </div>
+            <div>
+              URL:
+              <input
+              type='url'
+              value={url}
+              name='URL'
+              onChange={({ target }) => setUrl(target.value)}
+              />
+            </div>
+            <button type='submit'>Create</button>
+          </form>
+          <button onClick={() => setAddBlogVisible(false)}>Cancel</button>
+        </div>
+      </>
+  )}
 
   if (user === null) {
     return (
