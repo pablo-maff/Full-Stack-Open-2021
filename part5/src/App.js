@@ -14,9 +14,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [notification, setNotification] = useState(null)
 
   useEffect(() => {
@@ -78,33 +75,12 @@ const App = () => {
     //setAddBlogVisible(false)
   }
 
-  const handleTitleChange = event => {
-    setTitle(event.target.value)
-  }
-
-  const handleAuthorChange = event => {
-    setAuthor(event.target.value)
-  }
-
-  const handleUrlChange = event => {
-    setUrl(event.target.value)
-  }
-
-  const handleNewBlog = async event => {
-    event.preventDefault()
-
+  const newBlog = async blogObject => {
     try {
-      const newBlog = await blogService.create({
-        title,
-        author,
-        url
-      })
+      const createBlog = await blogService.create(blogObject)
 
-      setBlogs(blogs.concat(newBlog))
-      notify(`A new blog ${title} by ${author} added`)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      setBlogs(blogs.concat(createBlog))
+      notify(`A new blog ${createBlog.title} by ${createBlog.author} added`)
     } catch (exception) {
       notify('Title must be provided', 'alert')
     }
@@ -128,15 +104,7 @@ const App = () => {
         <p>{user.name} logged-in</p>
         <Button onClick={handleLogout} text='Logout' />
         <Togglable buttonLabel='New Blog'>
-          <BlogForm 
-            onSubmit={handleNewBlog}
-            title={title}
-            handleTitle={handleTitleChange}
-            author={author}
-            handleAuthor={handleAuthorChange}
-            url={url}
-            handleUrl={handleUrlChange}
-          />
+          <BlogForm newBlog={newBlog} />
         </Togglable>
         <Blogs blogs={blogs} />
       </div>
