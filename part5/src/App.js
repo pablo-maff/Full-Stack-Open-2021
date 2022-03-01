@@ -3,6 +3,9 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -70,7 +73,19 @@ const App = () => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
-    setAddBlogVisible(false)
+    //setAddBlogVisible(false)
+  }
+
+  const handleTitleChange = event => {
+    setTitle(event.target.value)
+  }
+
+  const handleAuthorChange = event => {
+    setAuthor(event.target.value)
+  }
+
+  const handleUrlChange = event => {
+    setUrl(event.target.value)
   }
 
   const handleNewBlog = async event => {
@@ -120,73 +135,39 @@ const App = () => {
       <Blog key={blog.id} blog={blog} />
   ))
 
-  const createBlogForm = () => {
-    
-    return (
-      <>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setAddBlogVisible(true)}>New Blog</button>
-        </div>
-        <div style={showWhenVisible}>
-          <form onSubmit={handleNewBlog}>
-            <div>
-              Title:
-              <input
-              type='title'
-              value={title}
-              name='Title'
-              onChange={({ target }) => setTitle(target.value)}
-              />
-            </div>
-            <div>
-              Author:
-              <input
-              type='author'
-              value={author}
-              name='Author'
-              onChange={({ target }) => setAuthor(target.value)}
-              />
-            </div>
-            <div>
-              URL:
-              <input
-              type='url'
-              value={url}
-              name='URL'
-              onChange={({ target }) => setUrl(target.value)}
-              />
-            </div>
-            <button type='submit'>Create</button>
-          </form>
-          <button onClick={() => setAddBlogVisible(false)}>Cancel</button>
-        </div>
-      </>
-  )}
 
-  if (user === null) {
-    return (
+  return (
     <>
-      <Notification notification={notification}/>
-      <LoginForm handleLogin={handleLogin} 
-        handleUsernameChange={handleUsernameChange}
-        handlePasswordChange={handlePasswordChange}
-        username={username}
-        password={password}
-      />
-    </>
-    )
-  }
-
-  return (      
-    <div>
       <h1>Blogs</h1>
       <Notification notification={notification}/>
-      <p>{user.name} logged-in</p>
-      <button onClick={handleLogout}>logout</button>
-      <h2>Create New</h2>
-      {createBlogForm()}
-      {getBlogs()}
-    </div>
+    {user === null ?
+      <Togglable buttonLabel='login'>
+        <LoginForm 
+          handleLogin={handleLogin} 
+          handleUsernameChange={handleUsernameChange}
+          handlePasswordChange={handlePasswordChange}
+          username={username}
+          password={password}
+        />
+      </Togglable> :
+      <div>
+        <p>{user.name} logged-in</p>
+        <button onClick={handleLogout}>logout</button>
+        <Togglable buttonLabel='new blog'>
+          <BlogForm 
+            onSubmit={handleNewBlog}
+            title={title}
+            handleTitle={handleTitleChange}
+            author={author}
+            handleAuthor={handleAuthorChange}
+            url={url}
+            handleUrl={handleUrlChange}
+          />
+        </Togglable>
+        {getBlogs()}
+      </div>
+    }
+  </>
   )
 }
 
