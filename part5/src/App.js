@@ -11,8 +11,6 @@ import Button from './components/Button'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
 
@@ -38,22 +36,9 @@ const App = () => {
     }, 5000)
   }
 
-  const handleUsernameChange = event => {
-    setUsername(event.target.value)
-  }
-
-  const handlePasswordChange = event => {
-    setPassword(event.target.value)
-  }
-
-  const handleLogin = async event => {
-    event.preventDefault()
-    console.log('Logging in with', username, password);
-  
+  const handleLogin = async logInObject => {
     try {
-      const user = await loginService.login({
-        username, password
-      })
+      const user = await loginService.login(logInObject)
 
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
@@ -61,8 +46,6 @@ const App = () => {
 
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
     } catch (exception) {
       notify('Wrong Username or Password', 'alert')
     }
@@ -92,13 +75,7 @@ const App = () => {
       <Notification notification={notification}/>
     {user === null ?
       <Togglable buttonLabel='Login'>
-        <LoginForm 
-          handleLogin={handleLogin} 
-          handleUsernameChange={handleUsernameChange}
-          handlePasswordChange={handlePasswordChange}
-          username={username}
-          password={password}
-        />
+        <LoginForm login={handleLogin} />
       </Togglable> :
       <div>
         <p>{user.name} logged-in</p>

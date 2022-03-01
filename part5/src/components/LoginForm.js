@@ -1,12 +1,29 @@
+import { useState } from "react"
 import Button from "./Button"
 
-const LoginForm = ({
-  handleLogin,
-  handleUsernameChange,
-  handlePasswordChange,
-  username,
-  password
-}) => {
+const LoginForm = ({ login }) => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleUsernameChange = event => {
+    setUsername(event.target.value)
+  }
+
+  const handlePasswordChange = event => {
+    setPassword(event.target.value)
+  }
+
+  const handleLogin = event => {
+    event.preventDefault()
+    
+    login({
+      username, password
+    })
+
+    setUsername('')
+    setPassword('')
+  }
+
   return (
     <>
       <h1>Log in to Application</h1>
