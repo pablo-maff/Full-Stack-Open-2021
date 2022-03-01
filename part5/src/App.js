@@ -6,6 +6,7 @@ import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Blogs from './components/Blogs'
 
 
 const App = () => {
@@ -109,14 +110,6 @@ const App = () => {
     }
   }
 
-  
-
-  const getBlogs = () => (
-    blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} />
-  ))
-
-
   return (
     <>
       <h1>Blogs</h1>
@@ -145,7 +138,7 @@ const App = () => {
             handleUrl={handleUrlChange}
           />
         </Togglable>
-        {getBlogs()}
+        <Blogs blogs={blogs} />
       </div>
     }
   </>
