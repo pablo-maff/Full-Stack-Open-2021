@@ -1,3 +1,5 @@
+import Button from "./Button"
+
 const BlogForm = ({ 
   onSubmit,
   title,
@@ -39,7 +41,7 @@ const BlogForm = ({
             onChange={handleUrl}
             />
           </div>
-          <button type='submit'>Create</button>
+          <Button type='submit' text='Create' />
         </form>
       </div>
     </>

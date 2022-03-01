@@ -1,3 +1,5 @@
+import Button from "./Button"
+
 const LoginForm = ({
   handleLogin,
   handleUsernameChange,
@@ -27,7 +29,7 @@ const LoginForm = ({
             onChange={handlePasswordChange}  
           />
         </div>
-        <button type='submit'>login</button>
+        <Button type='submit' text='Login' />
       </form>
     </>
   )

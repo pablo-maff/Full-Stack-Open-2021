@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
@@ -7,6 +6,7 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Blogs from './components/Blogs'
+import Button from './components/Button'
 
 
 const App = () => {
@@ -115,7 +115,7 @@ const App = () => {
       <h1>Blogs</h1>
       <Notification notification={notification}/>
     {user === null ?
-      <Togglable buttonLabel='login'>
+      <Togglable buttonLabel='Login'>
         <LoginForm 
           handleLogin={handleLogin} 
           handleUsernameChange={handleUsernameChange}
@@ -126,8 +126,8 @@ const App = () => {
       </Togglable> :
       <div>
         <p>{user.name} logged-in</p>
-        <button onClick={handleLogout}>logout</button>
-        <Togglable buttonLabel='new blog'>
+        <Button onClick={handleLogout} text='Logout' />
+        <Togglable buttonLabel='New Blog'>
           <BlogForm 
             onSubmit={handleNewBlog}
             title={title}
