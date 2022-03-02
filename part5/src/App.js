@@ -77,6 +77,16 @@ const App = () => {
     }
   }
 
+  const deleteBlog = async id => {
+    try {
+      await blogService.remove(id)
+      setBlogs(blogs.filter(
+        blog => blog.id !== id
+      ))
+    } catch (exception) {
+      notify('There has been some error trying to delete this blog', 'alert')
+    }
+  }
 
   return (
     <>
@@ -92,7 +102,7 @@ const App = () => {
         <Togglable buttonLabel='New Blog'>
           <BlogForm newBlog={newBlog} />
         </Togglable>
-        <Blogs blogs={blogs} user={user} updateBlog={updateBlog} />
+        <Blogs blogs={blogs} user={user} updateBlog={updateBlog} deleteBlog={deleteBlog} />
       </div>
     }
   </>

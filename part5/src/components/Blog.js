@@ -9,7 +9,7 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const Blog = ({ blog, user, updateBlog }) => { 
+const Blog = ({ blog, user, updateBlog, deleteBlog }) => { 
   const [view, setView] = useState(false)
   const [updated, setUpdated] = useState(false)
   
@@ -17,7 +17,14 @@ const Blog = ({ blog, user, updateBlog }) => {
     blog.likes += 1
     setUpdated(!updated)
     updateBlog(blog)
-  } 
+  }
+
+  const handleDelete = blog => {
+    window.confirm(
+      `Remove ${blog.title} by ${blog.author}`
+      ) 
+      && deleteBlog(blog.id)
+  }
 
   const toggleView = () => {
      setView(!view)
@@ -33,14 +40,17 @@ const Blog = ({ blog, user, updateBlog }) => {
         : 
         <>
           <div>
-            <p>{blog.title} {blog.author}</p> 
+            <p>
+              {blog.title} {blog.author}
+              <Button onClick={toggleView} text='Hide' />
+            </p> 
             <p>{blog.url}</p>
             <p>
               Likes {blog.likes}
               <Button onClick={() => handleLikes(blog)} text='Like' />
             </p>
             <p>{user.name}</p>
-            <Button onClick={toggleView} text='Hide' />
+            <Button onClick={() => handleDelete(blog)} text='Remove' />
           </div>
         </>
       }
