@@ -69,6 +69,7 @@ const App = () => {
     }
   }
 
+
   return (
     <>
       <h1>Blogs</h1>
@@ -83,7 +84,7 @@ const App = () => {
         <Togglable buttonLabel='New Blog'>
           <BlogForm newBlog={newBlog} />
         </Togglable>
-        <Blogs blogs={blogs} />
+        <Blogs blogs={blogs} user={user} />
       </div>
     }
   </>

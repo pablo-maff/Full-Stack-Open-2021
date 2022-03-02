@@ -1,6 +1,5 @@
 import { useState } from "react"
 import Button from "./Button"
-import Togglable from "./Togglable"
 
 const blogStyle = {
   paddingTop: 10,
@@ -10,13 +9,12 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const Blog = ({ blog }) => { 
+const Blog = ({ blog, user }) => { 
   const [view, setView] = useState(false)
 
   const toggleView = () => {
      setView(!view)
   }
-  console.log(view);
 
   return (
     <div style={blogStyle}>
@@ -30,17 +28,15 @@ const Blog = ({ blog }) => {
           <div>
             <p>{blog.title} {blog.author}</p> 
             <p>{blog.url}</p>
-            <p>{blog.likes}</p>
-            <p></p>
+            <p>
+              Likes {blog.likes}
+              <Button onClick={null} text='Like' />
+            </p>
+            <p>{user.name}</p>
             <Button onClick={toggleView} text='Hide' />
           </div>
         </>
       }
-      {/* {view ? 
-        <Button onClick={toggleButton} text='hide' />
-        : <Button onClick={toggleButton} text='view' />
-        {blog.title} {blog.author}
-      } */}
     </div>
   )}
 
