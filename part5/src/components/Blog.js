@@ -9,8 +9,15 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const Blog = ({ blog, user }) => { 
+const Blog = ({ blog, user, updateBlog }) => { 
   const [view, setView] = useState(false)
+  const [updated, setUpdated] = useState(false)
+  
+  const handleLikes = (blog) => {
+    blog.likes += 1
+    setUpdated(!updated)
+    updateBlog(blog)
+  } 
 
   const toggleView = () => {
      setView(!view)
@@ -30,7 +37,7 @@ const Blog = ({ blog, user }) => {
             <p>{blog.url}</p>
             <p>
               Likes {blog.likes}
-              <Button onClick={null} text='Like' />
+              <Button onClick={() => handleLikes(blog)} text='Like' />
             </p>
             <p>{user.name}</p>
             <Button onClick={toggleView} text='Hide' />

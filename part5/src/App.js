@@ -69,6 +69,15 @@ const App = () => {
     }
   }
 
+  const updateBlog = async blogObject => {
+    console.log('blogObject=', blogObject);
+    try {
+      await blogService.update(blogObject)
+    } catch (exception) {
+      notify('There has been some error trying to update this blog', 'alert')
+    }
+  }
+
 
   return (
     <>
@@ -84,7 +93,7 @@ const App = () => {
         <Togglable buttonLabel='New Blog'>
           <BlogForm newBlog={newBlog} />
         </Togglable>
-        <Blogs blogs={blogs} user={user} />
+        <Blogs blogs={blogs} user={user} updateBlog={updateBlog} />
       </div>
     }
   </>
