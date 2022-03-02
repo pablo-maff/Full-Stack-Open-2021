@@ -70,7 +70,6 @@ const App = () => {
   }
 
   const updateBlog = async blogObject => {
-    console.log('blogObject=', blogObject);
     try {
       await blogService.update(blogObject)
     } catch (exception) {
