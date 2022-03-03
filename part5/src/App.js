@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
@@ -58,16 +58,19 @@ const App = () => {
     //setAddBlogVisible(false)
   }
 
+  
   const newBlog = async blogObject => {
     try {
       const createBlog = await blogService.create(blogObject)
-
-      setBlogs(blogs.concat(createBlog))
+      blogs.concat(createBlog)
+      setBlogs(await blogService.getAll())
+      blogFormRef.current.toggleVisibility()
       notify(`A new blog ${createBlog.title} by ${createBlog.author} added`)
     } catch (exception) {
       notify('Title must be provided', 'alert')
     }
-  }
+ }
+
 
   const updateBlog = async blogObject => {
     try {
@@ -88,6 +91,8 @@ const App = () => {
     }
   }
 
+  const blogFormRef = useRef()
+
   return (
     <>
       <h1>Blogs</h1>
@@ -99,7 +104,7 @@ const App = () => {
       <div>
         <p>{user.name} logged-in</p>
         <Button onClick={handleLogout} text='Logout' />
-        <Togglable buttonLabel='New Blog'>
+        <Togglable buttonLabel='New Blog' ref={blogFormRef}>
           <BlogForm newBlog={newBlog} />
         </Togglable>
         <Blogs blogs={blogs} user={user} updateBlog={updateBlog} deleteBlog={deleteBlog} />

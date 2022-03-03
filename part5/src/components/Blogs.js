@@ -8,9 +8,9 @@ const Blogs = ({ blogs, user, updateBlog, deleteBlog }) => {
     <Blog 
       key={blog.id} 
       blog={blog} 
-      user={user} 
       updateBlog={updateBlog}
       deleteBlog={deleteBlog}
+      user={user}
     />
   ))
 }

@@ -12,7 +12,6 @@ const blogStyle = {
 const Blog = ({ blog, user, updateBlog, deleteBlog }) => { 
   const [view, setView] = useState(false)
   const [updated, setUpdated] = useState(false)
-  
   const handleLikes = (blog) => {
     blog.likes += 1
     setUpdated(!updated)
@@ -49,8 +48,11 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
               Likes {blog.likes}
               <Button onClick={() => handleLikes(blog)} text='Like' />
             </p>
-            <p>{user.name}</p>
+            <p>{blog.user.name}</p>
+            {blog.user.name === user.name ?
             <Button onClick={() => handleDelete(blog)} text='Remove' />
+            : null
+            }
           </div>
         </>
       }
