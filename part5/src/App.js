@@ -13,6 +13,8 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState(null)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -36,26 +38,38 @@ const App = () => {
     }, 5000)
   }
 
-  const handleLogin = async logInObject => {
-    try {
-      const user = await loginService.login(logInObject)
+  const handleUsernameChange = event => {
+    setUsername(event.target.value)
+  }
 
+  const handlePasswordChange = event => {
+    setPassword(event.target.value)
+  }
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      const user = await loginService.login({
+        username, password,
+      })
+      setUser(user)
+      blogService.setToken(user.token)
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-
-      blogService.setToken(user.token)
-      setUser(user)
+      setUsername('')
+      setPassword('')
     } catch (exception) {
-      notify('Wrong Username or Password', 'alert')
+      notify('wrong credentials', 'alert')
     }
   }
+
+
 
   const handleLogout = event => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
-    //setAddBlogVisible(false)
   }
 
 
@@ -98,7 +112,13 @@ const App = () => {
       <Notification notification={notification}/>
       {user === null ?
         <Togglable buttonLabel='Login'>
-          <LoginForm login={handleLogin} />
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={handleUsernameChange}
+            handlePasswordChange={handlePasswordChange}
+            handleSubmit={handleLogin}
+          />
         </Togglable> :
         <div>
           <p>{user.name} logged-in</p>

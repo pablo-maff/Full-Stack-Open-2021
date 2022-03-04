@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import PropTypes from 'prop-types'
 import Button from './Button'
 
 const BlogForm = ({ newBlog }) => {
@@ -70,11 +69,6 @@ const BlogForm = ({ newBlog }) => {
       </div>
     </>
   )
-}
-
-BlogForm.propTypes = {
-  handleTitleChange: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
 }
 
 export default BlogForm
