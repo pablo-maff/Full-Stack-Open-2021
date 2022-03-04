@@ -17,7 +17,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const App = () => {
     //setAddBlogVisible(false)
   }
 
-  
+
   const newBlog = async blogObject => {
     try {
       const createBlog = await blogService.create(blogObject)
@@ -69,7 +69,7 @@ const App = () => {
     } catch (exception) {
       notify('Title must be provided', 'alert')
     }
- }
+  }
 
 
   const updateBlog = async blogObject => {
@@ -97,20 +97,20 @@ const App = () => {
     <>
       <h1>Blogs</h1>
       <Notification notification={notification}/>
-    {user === null ?
-      <Togglable buttonLabel='Login'>
-        <LoginForm login={handleLogin} />
-      </Togglable> :
-      <div>
-        <p>{user.name} logged-in</p>
-        <Button onClick={handleLogout} text='Logout' />
-        <Togglable buttonLabel='New Blog' ref={blogFormRef}>
-          <BlogForm newBlog={newBlog} />
-        </Togglable>
-        <Blogs blogs={blogs} user={user} updateBlog={updateBlog} deleteBlog={deleteBlog} />
-      </div>
-    }
-  </>
+      {user === null ?
+        <Togglable buttonLabel='Login'>
+          <LoginForm login={handleLogin} />
+        </Togglable> :
+        <div>
+          <p>{user.name} logged-in</p>
+          <Button onClick={handleLogout} text='Logout' />
+          <Togglable buttonLabel='New Blog' ref={blogFormRef}>
+            <BlogForm newBlog={newBlog} />
+          </Togglable>
+          <Blogs blogs={blogs} user={user} updateBlog={updateBlog} deleteBlog={deleteBlog} />
+        </div>
+      }
+    </>
   )
 }
 

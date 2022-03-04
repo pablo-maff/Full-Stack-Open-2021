@@ -1,11 +1,12 @@
-import { useState } from "react"
-import Button from "./Button"
+import { useState } from 'react'
+import PropTypes from 'prop-types'
+import Button from './Button'
 
 const BlogForm = ({ newBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  
+
   const handleTitleChange = event => {
     setTitle(event.target.value)
   }
@@ -40,28 +41,28 @@ const BlogForm = ({ newBlog }) => {
           <div>
             Title:
             <input
-            type='title'
-            value={title}
-            name='Title'
-            onChange={handleTitleChange}
+              type='title'
+              value={title}
+              name='Title'
+              onChange={handleTitleChange}
             />
           </div>
           <div>
             Author:
             <input
-            type='author'
-            value={author}
-            name='Author'
-            onChange={handleAuthorChange}
+              type='author'
+              value={author}
+              name='Author'
+              onChange={handleAuthorChange}
             />
           </div>
           <div>
             URL:
             <input
-            type='url'
-            value={url}
-            name='URL'
-            onChange={handleUrlChange}
+              type='url'
+              value={url}
+              name='URL'
+              onChange={handleUrlChange}
             />
           </div>
           <Button type='submit' text='Create' />
@@ -69,6 +70,11 @@ const BlogForm = ({ newBlog }) => {
       </div>
     </>
   )
+}
+
+BlogForm.propTypes = {
+  handleTitleChange: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
 }
 
 export default BlogForm

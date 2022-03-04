@@ -1,5 +1,5 @@
-import { useState } from "react"
-import Button from "./Button"
+import { useState } from 'react'
+import Button from './Button'
 
 const blogStyle = {
   paddingTop: 10,
@@ -9,9 +9,10 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const Blog = ({ blog, user, updateBlog, deleteBlog }) => { 
+const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   const [view, setView] = useState(false)
   const [updated, setUpdated] = useState(false)
+
   const handleLikes = (blog) => {
     blog.likes += 1
     setUpdated(!updated)
@@ -21,12 +22,12 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   const handleDelete = blog => {
     window.confirm(
       `Remove ${blog.title} by ${blog.author}`
-      ) 
+    )
       && deleteBlog(blog.id)
   }
 
   const toggleView = () => {
-     setView(!view)
+    setView(!view)
   }
 
   return (
@@ -36,13 +37,13 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
           {blog.title} {blog.author}
           <Button onClick={toggleView} text='View' />
         </>
-        : 
+        :
         <>
           <div>
             <p>
               {blog.title} {blog.author}
               <Button onClick={toggleView} text='Hide' />
-            </p> 
+            </p>
             <p>{blog.url}</p>
             <p>
               Likes {blog.likes}
@@ -50,8 +51,8 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
             </p>
             <p>{blog.user.name}</p>
             {blog.user.name === user.name ?
-            <Button onClick={() => handleDelete(blog)} text='Remove' />
-            : null
+              <Button onClick={() => handleDelete(blog)} text='Remove' />
+              : null
             }
           </div>
         </>
