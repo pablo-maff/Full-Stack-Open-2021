@@ -64,14 +64,11 @@ const App = () => {
     }
   }
 
-
-
   const handleLogout = event => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
   }
-
 
   const newBlog = async blogObject => {
     try {
@@ -83,7 +80,6 @@ const App = () => {
       notify('Title must be provided', 'alert')
     }
   }
-
 
   const updateBlog = async blogObject => {
     try {
