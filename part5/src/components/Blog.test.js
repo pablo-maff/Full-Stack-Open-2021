@@ -7,6 +7,7 @@ import Blog from './Blog'
 describe('<Blog />', () => {
   let container
   let div
+  let likeHandler
 
   beforeEach(() => {
     const blog = {
@@ -22,8 +23,10 @@ describe('<Blog />', () => {
       name: 'Pablo Maffioli'
     }
 
-    const mockHandler = jest.fn()
-    container = render(<Blog blog={blog} user={user} onClick={mockHandler} />).container
+    const viewHandler = jest.fn()
+    likeHandler = jest.fn()
+
+    container = render(<Blog blog={blog} user={user} onClick={viewHandler} updateBlog={likeHandler} />).container
     div = container.querySelector('.blog')
   })
 
@@ -41,4 +44,18 @@ describe('<Blog />', () => {
     expect(div).toHaveTextContent('23')
     expect(div).toHaveTextContent('https://example.com')
   })
+
+  test.only(
+    'if the like button is called twice, the event handler the component received as props is called twice'
+    , () => {
+      const clickView = screen.getByText('View')
+      userEvent.click(clickView)
+      const giveLike = screen.getByText('Like')
+      userEvent.click(giveLike)
+      userEvent.click(giveLike)
+
+      expect(likeHandler.mock.calls).toHaveLength(2)
+      expect(div).toHaveTextContent('25')
+
+    })
 })
