@@ -45,7 +45,7 @@ describe('<Blog />', () => {
     expect(div).toHaveTextContent('https://example.com')
   })
 
-  test.only(
+  test(
     'if the like button is called twice, the event handler the component received as props is called twice'
     , () => {
       const clickView = screen.getByText('View')
@@ -56,6 +56,5 @@ describe('<Blog />', () => {
 
       expect(likeHandler.mock.calls).toHaveLength(2)
       expect(div).toHaveTextContent('25')
-
     })
 })
