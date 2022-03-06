@@ -25,7 +25,7 @@ describe('Blog app', function() {
       cy.contains('Pablo Maffioli logged-in')
     })
 
-    it.only('fails with wrong credentials', function () {
+    it('fails with wrong credentials', function() {
       cy.contains('Login').click()
       cy.get('#username').type('pmaff')
       cy.get('#password').type('wrongpass')
@@ -35,6 +35,21 @@ describe('Blog app', function() {
         .should('contain', 'wrong credentials')
         .and('have.css', 'color', 'rgb(255, 0, 0)')
         .and('have.css', 'border-style', 'solid')
+    })
+  })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'pmaff', password: 'pabpass' })
+    })
+
+    it.only('a new blog can be created', function() {
+      cy.createBlog({ title: 'cypress new blog', author: 'bot author', url: 'http://example.com' })
+
+      cy.contains('View').click()
+      cy.contains('cypress new blog')
+      cy.contains('bot author')
+      cy.contains('http://example.com')
     })
   })
 })
