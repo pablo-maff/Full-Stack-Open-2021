@@ -6,7 +6,13 @@ describe('Blog app', function() {
       username: 'pmaff',
       password: 'pabpass'
     }
+    const user2 = {
+      name: 'Edward Lear',
+      username: 'nonSensePoetry',
+      password: 'Pobble'
+    }
     cy.request('POST', 'http://localhost:3003/api/users/', user)
+    cy.request('POST', 'http://localhost:3003/api/users/', user2)
     cy.visit('http://localhost:3000')
   })
 
@@ -70,6 +76,22 @@ describe('Blog app', function() {
 
         cy.contains('Likes')
           .contains('1')
+      })
+
+      it('user can delete a blog if he is the owner', function() {
+        cy.contains('cypress new blog')
+          .contains('View').click()
+
+        cy.contains('Remove').click()
+      })
+
+      it.only('user can\'t delete a blog if he is not the owner', function() {
+        cy.contains('Logout').click()
+        cy.login({ username: 'nonSensePoetry', password: 'Pobble' })
+        cy.contains('cypress new blog')
+          .contains('View').click()
+
+        cy.contains('Remove').should('not.exist')
       })
     })
   })
