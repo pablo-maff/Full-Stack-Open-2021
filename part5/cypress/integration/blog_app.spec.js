@@ -85,13 +85,43 @@ describe('Blog app', function() {
         cy.contains('Remove').click()
       })
 
-      it.only('user can\'t delete a blog if he is not the owner', function() {
+      it('user can\'t delete a blog if he is not the owner', function() {
         cy.contains('Logout').click()
         cy.login({ username: 'nonSensePoetry', password: 'Pobble' })
         cy.contains('cypress new blog')
           .contains('View').click()
 
         cy.contains('Remove').should('not.exist')
+      })
+    })
+
+    describe('and several blogs exists', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'first blog', author: 'Alice', url: 'http://first.com'
+        })
+
+        cy.createBlog({
+          title: 'second blog', author: 'Bob', url: 'http://second.com'
+        })
+
+        cy.createBlog({
+          title: 'third blog', author: 'Carl', url: 'http://third.com'
+        })
+
+        cy.likeBlog('first blog', 2)
+        cy.likeBlog('second blog', 1)
+        cy.likeBlog('third blog', 3)
+      })
+
+      it('blogs are ordered by ammount of likes in descending order', function() {
+        cy.visit('http://localhost:3000')
+        cy.get('.blog')
+          .then($blog => {
+            cy.wrap($blog[0]).should('contain', 'third blog')
+            cy.wrap($blog[1]).should('contain', 'first blog')
+            cy.wrap($blog[2]).should('contain', 'second blog')
+          })
       })
     })
   })

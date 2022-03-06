@@ -42,6 +42,16 @@ Cypress.Commands.add('createBlog', ({ title, author, url }) => {
       'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedBlogappUser')).token}`
     }
   })
-
   cy.visit('http://localhost:3000')
+})
+
+Cypress.Commands.add('likeBlog', (title, likes) => {
+  cy.contains(title)
+    .contains('View').click()
+
+  for(let n = 0; n < likes; n++) {
+    cy.contains(title)
+    cy.contains('Like').click()
+  }
+  cy.contains('Hide').click()
 })

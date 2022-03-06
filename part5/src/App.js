@@ -122,7 +122,9 @@ const App = () => {
           <Togglable buttonLabel='New Blog' ref={blogFormRef}>
             <BlogForm newBlog={newBlog} />
           </Togglable>
-          <Blogs blogs={blogs} user={user} updateBlog={updateBlog} deleteBlog={deleteBlog} />
+          <div className='blogs'>
+            <Blogs blogs={blogs} user={user} updateBlog={updateBlog} deleteBlog={deleteBlog} />
+          </div>
         </div>
       }
     </>

@@ -31,22 +31,20 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
         </>
         :
         <>
-          <div>
-            <p>
-              {blog.title} {blog.author}
-              <Button onClick={toggleView} text='Hide' />
-            </p>
-            <p>{blog.url}</p>
-            <p>
-              Likes {blog.likes}
-              <Button onClick={() => handleLikes(blog)} text='Like' />
-            </p>
-            <p>{blog.user.name}</p>
-            {blog.user.name === user.name ?
-              <Button onClick={() => handleDelete(blog)} text='Remove' />
-              : null
-            }
-          </div>
+          <p>
+            {blog.title} {blog.author}
+            <Button onClick={toggleView} text='Hide' />
+          </p>
+          <p>{blog.url}</p>
+          <p>
+            Likes {blog.likes}
+            <Button onClick={() => handleLikes(blog)} text='Like' />
+          </p>
+          <p>{blog.user.name}</p>
+          {blog.user.name === user.name ?
+            <Button onClick={() => handleDelete(blog)} text='Remove' />
+            : null
+          }
         </>
       }
     </div>
