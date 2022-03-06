@@ -43,13 +43,34 @@ describe('Blog app', function() {
       cy.login({ username: 'pmaff', password: 'pabpass' })
     })
 
-    it.only('a new blog can be created', function() {
-      cy.createBlog({ title: 'cypress new blog', author: 'bot author', url: 'http://example.com' })
+    it('a new blog can be created', function() {
+      cy.contains('New Blog').click()
+      cy.get('#blog-title').type('a blog created by cypress')
+      cy.get('#blog-author').type('Mr. Cypress')
+      cy.get('#blog-url').type('http://example.com')
+      cy.contains('Create').click()
 
       cy.contains('View').click()
-      cy.contains('cypress new blog')
-      cy.contains('bot author')
+      cy.contains('a blog created by cypress')
+      cy.contains('Mr. Cypress')
       cy.contains('http://example.com')
+    })
+
+    describe('and a blog exists', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'cypress new blog', author: 'bot author', url: 'http://newblog.com'
+        })
+      })
+
+      it('user can like a blog', function() {
+        cy.contains('cypress new blog')
+          .contains('View').click()
+        cy.contains('Like').click()
+
+        cy.contains('Likes')
+          .contains('1')
+      })
     })
   })
 })
