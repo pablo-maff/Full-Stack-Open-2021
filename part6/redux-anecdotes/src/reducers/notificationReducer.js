@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { initialState } from "./anecdoteReducer"
+
+const initialState = `Message`
 
 const notificationSlice = createSlice({
   name: 'notification',
