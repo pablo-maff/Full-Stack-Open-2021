@@ -16,10 +16,11 @@ const Anecdote = ({ anecdote, handleLike }) => {
 }
 
 const AnecdoteList = () => {
-  let anecdotes = useSelector(state => state)
+  let anecdotes = useSelector(state => state.anecdotes)
   const dispatch = useDispatch()
-
-  anecdotes.sort((a, b) => b.votes - a.votes)
+  
+  const sortAnecdotes = [...anecdotes]
+  sortAnecdotes.sort((a, b) => b.votes - a.votes)
 
   const vote = (id) => {
     dispatch(voteAnecdote(id))
@@ -27,7 +28,7 @@ const AnecdoteList = () => {
 
   return (
     <>
-      {anecdotes.map(anecdote =>
+      {sortAnecdotes.map(anecdote =>
          <Anecdote 
           key={anecdote.id}
           anecdote={anecdote}
