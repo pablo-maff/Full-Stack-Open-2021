@@ -17,23 +17,36 @@ const Anecdote = ({ anecdote, handleLike }) => {
 }
 
 const AnecdoteList = () => {
-  let anecdotes = useSelector(state => state.anecdotes)
+  const sortAnecdotes = (anecdotes) => {
+    const sortedAnecdotes = [...anecdotes]
+    sortedAnecdotes.sort((a, b) => b.votes - a.votes)
+    return sortedAnecdotes
+  }
+
+  let anecdotes = useSelector(({ filter, anecdotes }) => {
+    if (!filter) {
+      return sortAnecdotes(anecdotes)
+    }
+    else {
+      let filtered = anecdotes.filter(anecdote => 
+        anecdote.content.toLowerCase().includes(filter.toLowerCase()))
+ 
+      return sortAnecdotes(filtered)    
+    }
+  })
+
   const dispatch = useDispatch()
-  
-  const sortedAnecdotes = [...anecdotes]
-  sortedAnecdotes.sort((a, b) => b.votes - a.votes)
 
   const vote = (anecdote) => {
     dispatch(voteAnecdote(anecdote.id))
     dispatch(setLikeNotify(anecdote.content))
-    setTimeout(() => {dispatch(unSetNotify())}, 5000)
+    setTimeout(() => { dispatch(unSetNotify('')) }, 5000)
   }
-
 
   return (
     <>
-      {sortedAnecdotes.map(anecdote =>
-         <Anecdote 
+      {anecdotes.map(anecdote =>
+        <Anecdote
           key={anecdote.id}
           anecdote={anecdote}
           handleLike={() => vote(anecdote)}
