@@ -5,12 +5,10 @@ const notificationSlice = createSlice({
   initialState: '',
   reducers: {
     setNotify(state, action){
-      state = action.payload
-      return state
+      return action.payload
     },
     unSetNotify(state, action) {
-      state = action.payload
-      return state
+      return action.payload
     }
   }
 })
