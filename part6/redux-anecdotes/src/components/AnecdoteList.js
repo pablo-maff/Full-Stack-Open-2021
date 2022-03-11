@@ -38,7 +38,7 @@ const AnecdoteList = () => {
   const dispatch = useDispatch()
 
   const vote = (anecdote) => {
-    dispatch(voteAnecdote(anecdote.id))
+    dispatch(voteAnecdote(anecdote))//anecdote.id))
     dispatch(setLikeNotify(anecdote.content))
     setTimeout(() => { dispatch(unSetNotify('')) }, 5000)
   }
