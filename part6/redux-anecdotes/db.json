@@ -23,7 +23,7 @@
     {
       "content": "Premature optimization is the root of all evil.",
       "id": "25170",
-      "votes": 6
+      "votes": 7
     },
     {
       "content": "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
@@ -33,7 +33,12 @@
     {
       "content": "Far and few, far and few, Are the lands where the Jumblies live; Their heads are green, and their hands are blue, And they went to sea in a Sieve.",
       "id": "66203",
-      "votes": 9
+      "votes": 10
+    },
+    {
+      "content": "The world in general knows that pobbles are happier without their toes",
+      "id": "50442",
+      "votes": 1
     }
   ]
 }
