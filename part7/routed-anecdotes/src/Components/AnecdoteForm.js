@@ -1,18 +1,20 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useField } from '../hooks'
 
 const AnecdoteForm = ({ addNew }) => {
-  //const [content, setContent] = useState('')
-  //const [author, setAuthor] = useState('')
-  //const [info, setInfo] = useState('')
   const content = useField('text')
   const author = useField('text')
   const info = useField('text')
 
   const navigate = useNavigate()
+
+  const handleReset = e => {
+    e.preventDefault()
+    const values = [content, author, info]
+    values.map(value => value.reset())  
+  }
   
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault()
     addNew({
       content: content.value,
@@ -41,6 +43,7 @@ const AnecdoteForm = ({ addNew }) => {
           <input {...info} />
         </div>
         <button>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
