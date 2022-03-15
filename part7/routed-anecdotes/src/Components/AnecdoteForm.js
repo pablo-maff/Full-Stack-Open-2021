@@ -17,13 +17,12 @@ const AnecdoteForm = ({ addNew }) => {
   const handleSubmit = e => {
     e.preventDefault()
     addNew({
-      content: content.value,
-      author: author.value,
-      info: info.value,
+      content: content.inputs.value,
+      author: author.inputs.value,
+      info: info.inputs.value,
       votes: 0
     })
     navigate('/')
-
   }
 
   return (
@@ -32,15 +31,15 @@ const AnecdoteForm = ({ addNew }) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content} />
+          <input {...content.inputs} />
         </div>
         <div>
           author
-          <input {...author} />
+          <input {...author.inputs} />
         </div>
         <div>
           url for more info
-          <input {...info} />
+          <input {...info.inputs} />
         </div>
         <button>create</button>
         <button onClick={handleReset}>reset</button>
