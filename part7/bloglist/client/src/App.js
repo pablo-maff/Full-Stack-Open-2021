@@ -9,6 +9,7 @@ import Blogs from './components/Blogs'
 import Button from './components/Button'
 import { Routes, Route } from 'react-router-dom'
 import Users from './components/Users'
+import User from './components/User'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -138,6 +139,7 @@ const App = () => {
           }
         />
         <Route path="/users" element={<Users />} />
+        <Route path={`/users/:id`} element={<User blogs={blogs} />} />
       </Routes>
     </>
   )
