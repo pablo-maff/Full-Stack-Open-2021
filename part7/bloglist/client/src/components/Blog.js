@@ -1,4 +1,5 @@
 import Button from './Button'
+import Comments from './Comments'
 
 const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   if (!blog) return null
@@ -26,6 +27,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
       {blog.user.name === user.name ? (
         <Button onClick={() => handleDelete(blog)} text="Remove" />
       ) : null}
+      <Comments blog={blog} />
     </>
   )
 }
