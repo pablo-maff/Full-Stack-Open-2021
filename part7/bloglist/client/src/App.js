@@ -7,6 +7,8 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Blogs from './components/Blogs'
 import Button from './components/Button'
+import { Routes, Route } from 'react-router-dom'
+import Users from './components/Users'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -111,22 +113,32 @@ const App = () => {
           />
         </Togglable>
       ) : (
-        <div>
+        <>
           <p>{user.name} logged-in</p>
           <Button onClick={handleLogout} text="Logout" />
-          <Togglable buttonLabel="New Blog" ref={blogFormRef}>
-            <BlogForm newBlog={newBlog} />
-          </Togglable>
-          <div className="blogs">
-            <Blogs
-              blogs={blogs}
-              user={user}
-              updateBlog={updateBlog}
-              deleteBlog={deleteBlog}
-            />
-          </div>
-        </div>
+        </>
       )}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Togglable buttonLabel="New Blog" ref={blogFormRef}>
+                <BlogForm newBlog={newBlog} />
+              </Togglable>
+              <div className="blogs">
+                <Blogs
+                  blogs={blogs}
+                  user={user}
+                  updateBlog={updateBlog}
+                  deleteBlog={deleteBlog}
+                />
+              </div>
+            </>
+          }
+        />
+        <Route path="/users" element={<Users />} />
+      </Routes>
     </>
   )
 }
