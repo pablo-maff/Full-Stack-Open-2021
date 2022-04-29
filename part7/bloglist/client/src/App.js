@@ -82,6 +82,7 @@ const App = () => {
   }
 
   const updateBlog = async (blogObject) => {
+    console.log(blogObject)
     try {
       await blogService.update(blogObject)
 
@@ -145,6 +146,7 @@ const App = () => {
                 user={user}
                 updateBlog={updateBlog}
                 deleteBlog={deleteBlog}
+                notify={notify}
               />
             }
           />
