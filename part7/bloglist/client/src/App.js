@@ -6,11 +6,11 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Blogs from './components/Blogs'
-import Button from './components/Button'
 import { Routes, Route, useMatch } from 'react-router-dom'
 import Users from './components/Users'
 import User from './components/User'
 import Blog from './components/Blog'
+import Menu from './components/Menu'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -111,52 +111,47 @@ const App = () => {
 
   return (
     <>
+      <Menu user={user} logout={handleLogout} />
       <h1>Blogs</h1>
       <Notification notification={notification} />
       {user === null ? (
-        <Togglable buttonLabel="Login">
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={handleUsernameChange}
-            handlePasswordChange={handlePasswordChange}
-            handleSubmit={handleLogin}
-          />
-        </Togglable>
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={handleUsernameChange}
+          handlePasswordChange={handlePasswordChange}
+          handleSubmit={handleLogin}
+        />
       ) : (
-        <>
-          <p>{user.name} logged-in</p>
-          <Button onClick={handleLogout} text="Logout" />
-        </>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Togglable buttonLabel="New Blog" ref={blogFormRef}>
+                  <BlogForm newBlog={newBlog} />
+                </Togglable>
+                <div className="blogs">
+                  <Blogs blogs={blogs} />
+                </div>
+              </>
+            }
+          />
+          <Route
+            path={`/blogs/:id`}
+            element={
+              <Blog
+                blog={blogDetails}
+                user={user}
+                updateBlog={updateBlog}
+                deleteBlog={deleteBlog}
+              />
+            }
+          />
+          <Route path="/users" element={<Users />} />
+          <Route path={`/users/:id`} element={<User blogs={blogs} />} />
+        </Routes>
       )}
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Togglable buttonLabel="New Blog" ref={blogFormRef}>
-                <BlogForm newBlog={newBlog} />
-              </Togglable>
-              <div className="blogs">
-                <Blogs blogs={blogs} />
-              </div>
-            </>
-          }
-        />
-        <Route
-          path={`/blogs/:id`}
-          element={
-            <Blog
-              blog={blogDetails}
-              user={user}
-              updateBlog={updateBlog}
-              deleteBlog={deleteBlog}
-            />
-          }
-        />
-        <Route path="/users" element={<Users />} />
-        <Route path={`/users/:id`} element={<User blogs={blogs} />} />
-      </Routes>
     </>
   )
 }
