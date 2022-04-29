@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import userService from '../services/users'
 
 const User = ({ blogs }) => {
   const [user, setUser] = useState([])
 
-  const userID = window.location.pathname.slice(7)
+  const userID = useParams().id
 
   useEffect(async () => {
     const userData = await userService.getUser(userID)

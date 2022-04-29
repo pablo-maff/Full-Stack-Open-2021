@@ -1,14 +1,10 @@
-import { useState } from 'react'
 import Button from './Button'
 
 const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
-  const [view, setView] = useState(false)
-  const [updated, setUpdated] = useState(false)
-
-  const handleLikes = (blog) => {
-    blog.likes += 1
-    setUpdated(!updated)
-    updateBlog(blog)
+  if (!blog) return null
+  const handleLikes = () => {
+    const likedBlog = { ...blog, likes: (blog.likes += 1) }
+    updateBlog(likedBlog)
   }
 
   const handleDelete = (blog) => {
@@ -16,35 +12,21 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
       deleteBlog(blog.id)
   }
 
-  const toggleView = () => {
-    setView(!view)
-  }
-
   return (
-    <div className="blog">
-      {view === false ? (
-        <>
-          {blog.title} {blog.author}
-          <Button onClick={toggleView} text="View" />
-        </>
-      ) : (
-        <>
-          <p>
-            {blog.title} {blog.author}
-            <Button onClick={toggleView} text="Hide" />
-          </p>
-          <p>{blog.url}</p>
-          <p>
-            Likes {blog.likes}
-            <Button onClick={() => handleLikes(blog)} text="Like" />
-          </p>
-          <p>{blog.user.name}</p>
-          {blog.user.name === user.name ? (
-            <Button onClick={() => handleDelete(blog)} text="Remove" />
-          ) : null}
-        </>
-      )}
-    </div>
+    <>
+      <h2>
+        {blog.title} by {blog.author}
+      </h2>
+      <a href={blog.url}>{blog.url}</a>
+      <p>
+        Likes {blog.likes}
+        <Button onClick={handleLikes} text="Like" />
+      </p>
+      <p>added by {blog.user.name}</p>
+      {blog.user.name === user.name ? (
+        <Button onClick={() => handleDelete(blog)} text="Remove" />
+      ) : null}
+    </>
   )
 }
 

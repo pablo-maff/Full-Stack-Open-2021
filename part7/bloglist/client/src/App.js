@@ -7,9 +7,10 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Blogs from './components/Blogs'
 import Button from './components/Button'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useMatch } from 'react-router-dom'
 import Users from './components/Users'
 import User from './components/User'
+import Blog from './components/Blog'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -83,6 +84,10 @@ const App = () => {
   const updateBlog = async (blogObject) => {
     try {
       await blogService.update(blogObject)
+
+      setBlogs(
+        blogs.map((blog) => (blog.id === blogObject.id ? blogObject : blog))
+      )
     } catch (exception) {
       notify('There has been some error trying to update this blog', 'alert')
     }
@@ -98,6 +103,11 @@ const App = () => {
   }
 
   const blogFormRef = useRef()
+
+  const match = useMatch('/blogs/:id')
+  const blogDetails = match
+    ? blogs.find((blog) => blog.id === match.params.id)
+    : null
 
   return (
     <>
@@ -128,14 +138,20 @@ const App = () => {
                 <BlogForm newBlog={newBlog} />
               </Togglable>
               <div className="blogs">
-                <Blogs
-                  blogs={blogs}
-                  user={user}
-                  updateBlog={updateBlog}
-                  deleteBlog={deleteBlog}
-                />
+                <Blogs blogs={blogs} />
               </div>
             </>
+          }
+        />
+        <Route
+          path={`/blogs/:id`}
+          element={
+            <Blog
+              blog={blogDetails}
+              user={user}
+              updateBlog={updateBlog}
+              deleteBlog={deleteBlog}
+            />
           }
         />
         <Route path="/users" element={<Users />} />
