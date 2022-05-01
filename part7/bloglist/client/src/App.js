@@ -6,18 +6,22 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Blogs from './components/Blogs'
-import { Routes, Route, useMatch } from 'react-router-dom'
+import { Routes, Route, useMatch, useNavigate } from 'react-router-dom'
 import Users from './components/Users'
 import User from './components/User'
 import Blog from './components/Blog'
 import Menu from './components/Menu'
+import { setNotificationRedux } from './reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -31,13 +35,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
-  const notify = (message, type = 'info') => {
-    setNotification({ message, type })
-    setTimeout(() => {
-      setNotification(null)
-    }, 5000)
-  }
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value)
@@ -60,7 +57,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      notify('wrong credentials', 'alert')
+      dispatch(setNotificationRedux('wrong credentials', 'alert', 5))
     }
   }
 
@@ -75,14 +72,19 @@ const App = () => {
       const createBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat({ ...createBlog, user: user }))
       blogFormRef.current.toggleVisibility()
-      notify(`A new blog ${createBlog.title} by ${createBlog.author} added`)
+      dispatch(
+        setNotificationRedux(
+          `A new blog ${createBlog.title} by ${createBlog.author} added`,
+          'success',
+          5
+        )
+      )
     } catch (exception) {
-      notify('Title must be provided', 'alert')
+      dispatch(setNotificationRedux('Title must be provided', 'alert', 5))
     }
   }
 
   const updateBlog = async (blogObject) => {
-    console.log(blogObject)
     try {
       await blogService.update(blogObject)
 
@@ -90,7 +92,13 @@ const App = () => {
         blogs.map((blog) => (blog.id === blogObject.id ? blogObject : blog))
       )
     } catch (exception) {
-      notify('There has been some error trying to update this blog', 'alert')
+      dispatch(
+        setNotificationRedux(
+          "Can't give like right now, please try later",
+          'alert',
+          5
+        )
+      )
     }
   }
 
@@ -98,8 +106,15 @@ const App = () => {
     try {
       await blogService.remove(id)
       setBlogs(blogs.filter((blog) => blog.id !== id))
+      navigate('./')
     } catch (exception) {
-      notify('There has been some error trying to delete this blog', 'alert')
+      dispatch(
+        setNotificationRedux(
+          'There has been some error trying to delete this blog',
+          'alert',
+          5
+        )
+      )
     }
   }
 
@@ -114,7 +129,7 @@ const App = () => {
     <>
       <Menu user={user} logout={handleLogout} />
       <h1>Blogs</h1>
-      <Notification notification={notification} />
+      <Notification />
       {user === null ? (
         <LoginForm
           username={username}
@@ -146,7 +161,6 @@ const App = () => {
                 user={user}
                 updateBlog={updateBlog}
                 deleteBlog={deleteBlog}
-                notify={notify}
               />
             }
           />

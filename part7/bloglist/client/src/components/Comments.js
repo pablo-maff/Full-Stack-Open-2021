@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react'
 import CommentForm from './CommentForm'
 import commentService from '../services/comments'
+import { useDispatch } from 'react-redux'
+import { setNotificationRedux } from '../reducers/notificationReducer'
 
-const Comments = ({ blog, notify }) => {
+const Comments = ({ blog }) => {
   const [comments, setComments] = useState([])
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     setComments(blog.comments)
@@ -15,7 +19,7 @@ const Comments = ({ blog, notify }) => {
       const createComment = await commentService.create(newCommentObj)
       setComments(comments.concat({ ...createComment }))
     } catch (exception) {
-      notify('Error creating comment', 'alert')
+      dispatch(setNotificationRedux('Error creating comment', 'alert', 5))
     }
   }
 

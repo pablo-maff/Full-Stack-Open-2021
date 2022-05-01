@@ -1,7 +1,7 @@
 import Button from './Button'
 import Comments from './Comments'
 
-const Blog = ({ blog, user, updateBlog, deleteBlog, notify }) => {
+const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   if (!blog) return null
   const handleLikes = () => {
     const likedBlog = { ...blog, likes: (blog.likes += 1) }
@@ -27,7 +27,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog, notify }) => {
       {blog.user.name === user.name ? (
         <Button onClick={() => handleDelete(blog)} text="Remove" />
       ) : null}
-      <Comments blog={blog} notify={notify} />
+      <Comments blog={blog} />
     </>
   )
 }
