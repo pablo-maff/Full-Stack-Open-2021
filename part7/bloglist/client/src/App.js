@@ -13,7 +13,11 @@ import Blog from './components/Blog'
 import Menu from './components/Menu'
 import { setNotification } from './reducers/notificationReducer'
 import { useDispatch, useSelector } from 'react-redux'
-import { initializeBlogs } from './reducers/blogReducer'
+import {
+  deleteBlogAction,
+  initializeBlogs,
+  updateBlogAction,
+} from './reducers/blogReducer'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -69,37 +73,18 @@ const App = () => {
     setUser(null)
   }
 
-  const updateBlog = async (blogObject) => {
-    try {
-      await blogService.update(blogObject)
-      //setBlogs(
-      //   blogs.map((blog) => (blog.id === blogObject.id ? blogObject : blog))
-      // )
-    } catch (exception) {
-      dispatch(
-        setNotification(
-          "Can't give like right now, please try later",
-          'alert',
-          5
-        )
-      )
-    }
+  const handleLike = () => {
+    dispatch(
+      updateBlogAction({
+        id: blogDetails.id,
+        likes: blogDetails.likes + 1,
+      })
+    )
   }
 
-  const deleteBlog = async (id) => {
-    try {
-      await blogService.remove(id)
-      // setBlogs(blogs.filter((blog) => blog.id !== id))
-      navigate('./')
-    } catch (exception) {
-      dispatch(
-        setNotification(
-          'There has been some error trying to delete this blog',
-          'alert',
-          5
-        )
-      )
-    }
+  const handleDeleteBlog = () => {
+    window.confirm(`Remove ${blogDetails.title} by ${blogDetails.author}`) &&
+      dispatch(deleteBlogAction(blogDetails.id)).then(navigate('./'))
   }
 
   const matchBlog = useMatch('/blogs/:id')
@@ -141,8 +126,8 @@ const App = () => {
               <Blog
                 blog={blogDetails}
                 user={user}
-                updateBlog={updateBlog}
-                deleteBlog={deleteBlog}
+                handleDeleteBlog={handleDeleteBlog}
+                handleLike={handleLike}
               />
             }
           />

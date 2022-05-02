@@ -1,16 +1,8 @@
 import Button from './Button'
 import Comments from './Comments'
 
-const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
+const Blog = ({ blog, user, handleLike, handleDeleteBlog }) => {
   if (!blog) return null
-  const handleLikes = () => {
-    const likedBlog = { ...blog, likes: (blog.likes += 1) }
-    updateBlog(likedBlog)
-  }
-  const handleDelete = (blog) => {
-    window.confirm(`Remove ${blog.title} by ${blog.author}`) &&
-      deleteBlog(blog.id)
-  }
 
   return (
     <>
@@ -20,11 +12,11 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
       <a href={blog.url}>{blog.url}</a>
       <p>
         Likes {blog.likes}
-        <Button onClick={handleLikes} text="Like" />
+        <Button onClick={handleLike} text="Like" />
       </p>
       <p>added by {blog.user.name}</p>
       {blog.user.name === user.name ? (
-        <Button onClick={() => handleDelete(blog)} text="Remove" />
+        <Button onClick={handleDeleteBlog} text="Remove" />
       ) : null}
       <Comments blog={blog} />
     </>
