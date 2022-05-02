@@ -7,7 +7,6 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
     const likedBlog = { ...blog, likes: (blog.likes += 1) }
     updateBlog(likedBlog)
   }
-
   const handleDelete = (blog) => {
     window.confirm(`Remove ${blog.title} by ${blog.author}`) &&
       deleteBlog(blog.id)

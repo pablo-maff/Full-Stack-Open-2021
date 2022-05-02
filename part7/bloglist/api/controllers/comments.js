@@ -21,7 +21,6 @@ commentsRouter.post('/', async (req, res) => {
   })
 
   const savedComment = await comment.save()
-  console.log('commentedBlog', commentedBlog)
   commentedBlog.comments = commentedBlog.comments.concat(savedComment)
   await commentedBlog.save()
   res.json(savedComment)

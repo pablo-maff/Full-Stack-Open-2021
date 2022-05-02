@@ -19,7 +19,7 @@ const notificationSlice = createSlice({
 
 export const { setNotify, unSetNotify } = notificationSlice.actions
 
-export const setNotificationRedux = (message, type, time) => {
+export const setNotification = (message, type, time) => {
   return (dispatch) => {
     const toMiliseconds = time * 1000
     const timeoutID = setTimeout(() => dispatch(unSetNotify()), toMiliseconds)
