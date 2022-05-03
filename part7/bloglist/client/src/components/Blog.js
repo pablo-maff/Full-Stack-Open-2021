@@ -1,11 +1,42 @@
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+import { deleteBlogAction, updateBlogAction } from '../reducers/blogReducer'
 import Button from './Button'
 import Comments from './Comments'
 
-const Blog = ({ blog, user, handleLike, handleDeleteBlog }) => {
+const Blog = ({ user }) => {
+  const [blog, setBlog] = useState(null)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const { id } = useParams()
+  const findBlog = useSelector(({ blogs }) =>
+    blogs.find((blog) => blog.id === id)
+  )
+
+  useEffect(() => {
+    setBlog(findBlog)
+  }, [findBlog])
+
   if (!blog) return null
 
+  const handleLike = () => {
+    dispatch(
+      updateBlogAction({
+        id: blog.id,
+        likes: blog.likes + 1,
+      })
+    )
+  }
+
+  const handleDeleteBlog = () => {
+    window.confirm(`Remove ${blog.title} by ${blog.author}`) &&
+      dispatch(deleteBlogAction(blog.id)).then(navigate('/'))
+  }
+
   return (
-    <>
+    <div>
       <h2>
         {blog.title} by {blog.author}
       </h2>
@@ -19,7 +50,7 @@ const Blog = ({ blog, user, handleLike, handleDeleteBlog }) => {
         <Button onClick={handleDeleteBlog} text="Remove" />
       ) : null}
       <Comments blog={blog} />
-    </>
+    </div>
   )
 }
 

@@ -6,18 +6,14 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Blogs from './components/Blogs'
-import { Routes, Route, useMatch, useNavigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Users from './components/Users'
 import User from './components/User'
 import Blog from './components/Blog'
 import Menu from './components/Menu'
 import { setNotification } from './reducers/notificationReducer'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  deleteBlogAction,
-  initializeBlogs,
-  updateBlogAction,
-} from './reducers/blogReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -26,7 +22,6 @@ const App = () => {
 
   const blogs = useSelector((state) => state.blogs)
 
-  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -73,25 +68,6 @@ const App = () => {
     setUser(null)
   }
 
-  const handleLike = () => {
-    dispatch(
-      updateBlogAction({
-        id: blogDetails.id,
-        likes: blogDetails.likes + 1,
-      })
-    )
-  }
-
-  const handleDeleteBlog = () => {
-    window.confirm(`Remove ${blogDetails.title} by ${blogDetails.author}`) &&
-      dispatch(deleteBlogAction(blogDetails.id)).then(navigate('./'))
-  }
-
-  const matchBlog = useMatch('/blogs/:id')
-  const blogDetails = matchBlog
-    ? blogs.find((blog) => blog.id === matchBlog.params.id)
-    : null
-
   return (
     <>
       <Menu user={user} logout={handleLogout} />
@@ -120,17 +96,7 @@ const App = () => {
               </>
             }
           />
-          <Route
-            path={`/blogs/:id`}
-            element={
-              <Blog
-                blog={blogDetails}
-                user={user}
-                handleDeleteBlog={handleDeleteBlog}
-                handleLike={handleLike}
-              />
-            }
-          />
+          <Route path={`/blogs/:id`} element={<Blog user={user} />} />
           <Route path="/users" element={<Users />} />
           <Route path={`/users/:id`} element={<User blogs={blogs} />} />
         </Routes>
