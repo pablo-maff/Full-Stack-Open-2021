@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import blogService from '../services/blogs'
 import { setNotification } from './notificationReducer'
+import { appendUserBlog } from './usersReducer'
 
 const blogSlice = createSlice({
   name: 'blogs',
@@ -38,6 +39,7 @@ export const createBlog = (content) => {
     try {
       const newBlog = await blogService.create(content)
       dispatch(appendBlog(newBlog))
+      dispatch(appendUserBlog(newBlog))
       dispatch(
         setNotification(
           `A new blog ${content.title} by ${content.author} added`,

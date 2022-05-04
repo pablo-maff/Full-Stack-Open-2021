@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { deleteBlogAction, updateBlogAction } from '../reducers/blogReducer'
+import { deleteUserBlog } from '../reducers/usersReducer'
 import Button from './Button'
 import Comments from './Comments'
 
@@ -32,6 +33,7 @@ const Blog = ({ user }) => {
 
   const handleDeleteBlog = () => {
     window.confirm(`Remove ${blog.title} by ${blog.author}`) &&
+      dispatch(deleteUserBlog({ blogID: blog.id, userID: blog.user.id })) &&
       dispatch(deleteBlogAction(blog.id)).then(navigate('/'))
   }
 

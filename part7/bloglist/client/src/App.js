@@ -12,20 +12,20 @@ import User from './components/User'
 import Blog from './components/Blog'
 import Menu from './components/Menu'
 import { setNotification } from './reducers/notificationReducer'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
+import { initializeUsers } from './reducers/usersReducer'
 
 const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const blogs = useSelector((state) => state.blogs)
-
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
   }, [dispatch])
 
   useEffect(() => {
@@ -98,7 +98,7 @@ const App = () => {
           />
           <Route path={`/blogs/:id`} element={<Blog user={user} />} />
           <Route path="/users" element={<Users />} />
-          <Route path={`/users/:id`} element={<User blogs={blogs} />} />
+          <Route path={`/users/:id`} element={<User />} />
         </Routes>
       )}
     </>

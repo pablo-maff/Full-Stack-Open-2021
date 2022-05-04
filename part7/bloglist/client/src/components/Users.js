@@ -1,13 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import userService from '../services/users'
 
 const Users = () => {
-  const [users, setUsers] = useState([])
-  useEffect(() => {
-    userService.getAll().then((users) => setUsers(users))
-  }, [])
-
+  const users = useSelector(({ users }) => users)
   return (
     <div>
       <h2>Users</h2>
