@@ -66,6 +66,7 @@ blogsRouter.put('/:id', async (req, res) => {
   )
 
   await updatedBlog.populate('user', { username: 1, name: 1 })
+  await updatedBlog.populate('comments', { content: 1 })
 
   updatedBlog
     ? res.status(200).json(updatedBlog.toJSON())

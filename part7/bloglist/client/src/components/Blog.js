@@ -6,10 +6,12 @@ import { deleteUserBlog } from '../reducers/usersReducer'
 import Button from './Button'
 import Comments from './Comments'
 
-const Blog = ({ user }) => {
+const Blog = () => {
   const [blog, setBlog] = useState(null)
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  const user = useSelector(({ loggedInUser }) => loggedInUser)
 
   const { id } = useParams()
   const findBlog = useSelector(({ blogs }) =>

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import userService from '../services/users'
 
-const userSlice = createSlice({
+const usersSlice = createSlice({
   name: 'users',
   initialState: [],
   reducers: {
@@ -30,7 +30,7 @@ const userSlice = createSlice({
   },
 })
 
-export const { setUsers, appendBlog, deleteBlog } = userSlice.actions
+export const { setUsers, appendBlog, deleteBlog } = usersSlice.actions
 
 export const initializeUsers = () => {
   return async (dispatch) => {
@@ -51,4 +51,4 @@ export const deleteUserBlog = (blogObject) => {
   }
 }
 
-export default userSlice.reducer
+export default usersSlice.reducer

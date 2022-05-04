@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import blogService from './services/blogs'
-import loginService from './services/login'
+import React, { useEffect } from 'react'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
@@ -11,15 +9,13 @@ import Users from './components/Users'
 import User from './components/User'
 import Blog from './components/Blog'
 import Menu from './components/Menu'
-import { setNotification } from './reducers/notificationReducer'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/usersReducer'
+import { keepUserSessionAlive } from './reducers/loggedUserReducer'
 
 const App = () => {
-  const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const user = useSelector(({ loggedInUser }) => loggedInUser)
 
   const dispatch = useDispatch()
 
@@ -32,55 +28,17 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      dispatch(keepUserSessionAlive(user))
     }
   }, [])
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value)
-  }
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
-  }
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      })
-      setUser(user)
-      blogService.setToken(user.token)
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      dispatch(setNotification('wrong credentials', 'alert', 5))
-    }
-  }
-
-  const handleLogout = (event) => {
-    event.preventDefault()
-    window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
-  }
-
   return (
     <>
-      <Menu user={user} logout={handleLogout} />
+      <Menu />
       <h1>Blogs</h1>
       <Notification />
       {user === null ? (
-        <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={handleUsernameChange}
-          handlePasswordChange={handlePasswordChange}
-          handleSubmit={handleLogin}
-        />
+        <LoginForm />
       ) : (
         <Routes>
           <Route
@@ -96,7 +54,7 @@ const App = () => {
               </>
             }
           />
-          <Route path={`/blogs/:id`} element={<Blog user={user} />} />
+          <Route path={`/blogs/:id`} element={<Blog />} />
           <Route path="/users" element={<Users />} />
           <Route path={`/users/:id`} element={<User />} />
         </Routes>

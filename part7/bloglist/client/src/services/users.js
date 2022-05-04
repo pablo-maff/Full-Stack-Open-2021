@@ -6,10 +6,4 @@ const getAll = () => {
   return request.then((response) => response.data)
 }
 
-const getUser = (userID) => {
-  const request = axios.get(`${baseUrl}/${userID}`)
-
-  return request.then((response) => response.data)
-}
-
-export default { getAll, getUser }
+export default { getAll }
