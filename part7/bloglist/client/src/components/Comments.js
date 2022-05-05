@@ -3,6 +3,7 @@ import CommentForm from './CommentForm'
 import commentService from '../services/comments'
 import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
+import { appendCommentAction } from '../reducers/blogReducer'
 
 const Comments = ({ blog }) => {
   const [comments, setComments] = useState([])
@@ -11,13 +12,13 @@ const Comments = ({ blog }) => {
 
   useEffect(() => {
     setComments(blog.comments)
-  }, [])
+  }, [blog])
 
   const newComment = async (newCommentObj) => {
     newCommentObj = { ...newCommentObj, blogID: blog.id }
     try {
       const createComment = await commentService.create(newCommentObj)
-      setComments(comments.concat({ ...createComment }))
+      dispatch(appendCommentAction(createComment))
     } catch (exception) {
       dispatch(setNotification('Error creating comment', 'alert', 5))
     }
