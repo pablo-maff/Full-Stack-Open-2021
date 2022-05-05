@@ -15,6 +15,8 @@ commentsRouter.post('/', async (req, res) => {
   const id = body.blogID
   const commentedBlog = await Blog.findById(id)
 
+  if (!commentedBlog) return res.status(404).end()
+
   const comment = new Comment({
     content: body.content,
     blogID: body.blogID,
