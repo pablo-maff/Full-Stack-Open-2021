@@ -1,3 +1,11 @@
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+} from '@mui/material'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 const Blogs = () => {
@@ -6,15 +14,20 @@ const Blogs = () => {
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
 
   return (
-    <>
-      {sortedBlogs.map((blog) => (
-        <div key={blog.id} className="blog">
-          <Link to={`/blogs/${blog.id}`}>
-            {blog.title} by {blog.author}
-          </Link>
-        </div>
-      ))}
-    </>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableBody>
+          {sortedBlogs.map((blog) => (
+            <TableRow key={blog.id} className="blog">
+              <TableCell>
+                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+              </TableCell>
+              <TableCell>{blog.author}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   )
 }
 

@@ -1,3 +1,4 @@
+import { Button, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { initializeLoggedInUser } from '../reducers/loggedUserReducer'
@@ -23,8 +24,6 @@ const LoginForm = () => {
       password,
     }
     dispatch(initializeLoggedInUser(user))
-    setUsername('')
-    setPassword('')
   }
 
   return (
@@ -32,25 +31,28 @@ const LoginForm = () => {
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
-          username
-          <input
-            value={username}
+          <TextField
+            label="username"
             onChange={handleUsernameChange}
             id="username"
           />
         </div>
         <div>
-          password
-          <input
-            type="password"
-            value={password}
+          <TextField
+            label="password"
             onChange={handlePasswordChange}
+            type="password"
             id="password"
           />
         </div>
-        <button id="login-button" type="submit">
-          login
-        </button>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          id="login-button"
+        >
+          Login
+        </Button>
       </form>
     </div>
   )

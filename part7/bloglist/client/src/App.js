@@ -35,8 +35,8 @@ const App = () => {
   return (
     <>
       <Menu />
-      <h1>Blogs</h1>
       <Notification />
+      <h1>Blogs</h1>
       {user === null ? (
         <LoginForm />
       ) : (
