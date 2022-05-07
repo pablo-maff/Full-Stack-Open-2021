@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import Button from './Button'
 import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
+import { Button, TextField } from '@mui/material'
 
 const BlogForm = () => {
   const [title, setTitle] = useState('')
@@ -32,39 +32,50 @@ const BlogForm = () => {
 
   return (
     <>
-      <h2>New blog</h2>
-      <form onSubmit={createNewBlog}>
-        <div>
-          Title:
-          <input
-            type="title"
-            value={title}
-            name="Title"
-            onChange={handleTitleChange}
-            id="blog-title"
-          />
-        </div>
-        <div>
-          Author:
-          <input
-            type="author"
-            value={author}
-            name="Author"
-            onChange={handleAuthorChange}
-            id="blog-author"
-          />
-        </div>
-        <div>
-          URL:
-          <input
-            type="url"
-            value={url}
-            name="URL"
-            onChange={handleUrlChange}
-            id="blog-url"
-          />
-        </div>
-        <Button type="submit" text="Create" />
+      <form>
+        <TextField
+          fullWidth
+          required
+          multiline
+          type="title"
+          label="Title"
+          color="secondary"
+          value={title}
+          onChange={handleTitleChange}
+          id="blog-title"
+          margin="dense"
+        />
+        <TextField
+          fullWidth
+          type="author"
+          label="Auhor"
+          color="secondary"
+          value={author}
+          name="Author"
+          onChange={handleAuthorChange}
+          id="blog-author"
+          margin="dense"
+        />
+        <TextField
+          fullWidth
+          required
+          type="url"
+          label="URL"
+          color="secondary"
+          value={url}
+          name="URL"
+          onChange={handleUrlChange}
+          id="blog-url"
+          margin="dense"
+        />
+        <Button
+          onClick={createNewBlog}
+          variant="contained"
+          color="secondary"
+          sx={{ mb: 1 }}
+        >
+          Create
+        </Button>
       </form>
     </>
   )

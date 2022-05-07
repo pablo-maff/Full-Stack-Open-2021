@@ -4,6 +4,7 @@ import commentService from '../services/comments'
 import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { appendCommentAction } from '../reducers/blogReducer'
+import { List, ListItem, ListItemText, Typography } from '@mui/material'
 
 const Comments = ({ blog }) => {
   const [comments, setComments] = useState([])
@@ -27,13 +28,17 @@ const Comments = ({ blog }) => {
   return (
     <>
       <div>
-        <h3>Comments</h3>
+        <Typography variant="h5" sx={{ mt: 3, mb: 1 }}>
+          Comments
+        </Typography>
         <CommentForm newComment={newComment} />
-        <ul>
+        <List>
           {comments.map((comment) => (
-            <li key={comment.id}>{comment.content}</li>
+            <ListItem key={comment.id}>
+              <ListItemText primary={comment.content} />
+            </ListItem>
           ))}
-        </ul>
+        </List>
       </div>
     </>
   )

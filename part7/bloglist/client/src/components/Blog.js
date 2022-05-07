@@ -1,9 +1,9 @@
+import { Button, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { deleteBlogAction, updateBlogAction } from '../reducers/blogReducer'
 import { deleteUserBlog } from '../reducers/usersReducer'
-import Button from './Button'
 import Comments from './Comments'
 
 const Blog = () => {
@@ -41,17 +41,25 @@ const Blog = () => {
 
   return (
     <div>
-      <h2>
+      <Typography variant="h4" color="secondary">
         {blog.title} by {blog.author}
-      </h2>
-      <a href={blog.url}>{blog.url}</a>
-      <p>
+      </Typography>
+      <Button href={blog.url} sx={{ mt: 1 }}>
+        {blog.url}
+      </Button>
+      <Typography sx={{ mt: 1 }}>
         Likes {blog.likes}
-        <Button onClick={handleLike} text="Like" />
-      </p>
-      <p>added by {blog.user.name}</p>
+        <Button onClick={handleLike} variant="contained" sx={{ ml: 1 }}>
+          Like
+        </Button>
+      </Typography>
+      <Typography sx={{ mt: 2, mb: 2 }}>
+        added by <Link to={`/users/${blog.user.id}`}>{user.name}</Link>
+      </Typography>
       {blog.user.name === user.name ? (
-        <Button onClick={handleDeleteBlog} text="Remove" />
+        <Button onClick={handleDeleteBlog} variant="outlined">
+          Delete
+        </Button>
       ) : null}
       <Comments blog={blog} />
     </div>

@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/usersReducer'
 import { keepUserSessionAlive } from './reducers/loggedUserReducer'
+import { Typography, Container, Grid } from '@mui/material'
 
 const App = () => {
   const user = useSelector(({ loggedInUser }) => loggedInUser)
@@ -33,10 +34,16 @@ const App = () => {
   }, [])
 
   return (
-    <>
+    <Container sx={{ display: 'flex', flexDirection: 'column' }}>
       <Menu />
-      <Notification />
-      <h1>Blogs</h1>
+      <Typography
+        variant="h2"
+        component="h1"
+        color="darkblue"
+        sx={{ mt: 2, mb: 2 }}
+      >
+        Blogs
+      </Typography>
       {user === null ? (
         <LoginForm />
       ) : (
@@ -45,12 +52,17 @@ const App = () => {
             path="/"
             element={
               <>
-                <Togglable buttonLabel="New Blog">
-                  <BlogForm />
-                </Togglable>
+                <Grid container>
+                  <Grid item md={3} sm={5} xs={7}>
+                    <Togglable buttonLabel="New Blog">
+                      <BlogForm />
+                    </Togglable>
+                  </Grid>
+                </Grid>
                 <div className="blogs">
                   <Blogs />
                 </div>
+                <Notification />
               </>
             }
           />
@@ -59,7 +71,7 @@ const App = () => {
           <Route path={`/users/:id`} element={<User />} />
         </Routes>
       )}
-    </>
+    </Container>
   )
 }
 

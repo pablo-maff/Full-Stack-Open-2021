@@ -1,4 +1,4 @@
-import { AppBar, Button, IconButton, Toolbar } from '@mui/material'
+import { AppBar, Button, IconButton, Toolbar, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { userLoggedOutAction } from '../reducers/loggedUserReducer'
@@ -16,13 +16,9 @@ const Menu = () => {
     navigate('/')
   }
 
-  const padding = {
-    paddingRight: 5,
-  }
-
   return (
-    <AppBar position="static">
-      <Toolbar>
+    <AppBar position="static" sx={{ display: 'flex' }}>
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
         <IconButton edge="start" color="inherit" aria-label="menu"></IconButton>
         <Button color="inherit" component={Link} to="/">
           Blogs
@@ -33,7 +29,7 @@ const Menu = () => {
 
         {user ? (
           <>
-            <em style={padding}>{user.name} logged in</em>
+            <Typography>{user.name} logged in</Typography>
             <Button color="inherit" onClick={handleLogout}>
               Logout
             </Button>

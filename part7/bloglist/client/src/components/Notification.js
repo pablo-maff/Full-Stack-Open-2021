@@ -6,10 +6,18 @@ const Notification = () => {
 
   if (notification === null) return null
   else if (notification.type === 'alert') {
-    return <Alert severity="error">{notification.message}</Alert>
+    return (
+      <Alert severity="error" sx={{ mt: 10 }}>
+        {notification.message}
+      </Alert>
+    )
   }
 
-  return <Alert severity="success">{notification.message}</Alert>
+  return (
+    <Alert severity="success" sx={{ mt: 2 }}>
+      {notification.message}
+    </Alert>
+  )
 }
 
 export default Notification
