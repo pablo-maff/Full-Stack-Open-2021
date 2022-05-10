@@ -1,0 +1,22 @@
+{
+  "name": "fso-part-8-graphql",
+  "version": "1.0.0",
+  "description": "Part 8 of Full Stack Open",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "graphql",
+    "apollo",
+    "full-stack-open",
+    "books",
+    "library"
+  ],
+  "author": "Pablo Maffioli",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^3.7.0",
+    "graphql": "^16.5.0"
+  }
+}
