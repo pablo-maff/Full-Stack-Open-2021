@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, gql, UserInputError } = require('apollo-server')
 const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
@@ -90,20 +90,32 @@ const resolvers = {
         published: args.published,
         genres: args.genres,
       })
-      const author = new Author({
-        name: args.author,
-      })
-      await author.save()
-      // const findAuthor = await Author.findOne({ name: args.author })
-      // if (!findAuthor) {
-      //   const author = new Author({ name: args.author, born: args.born })
-      //   await author.save()
-      // }
-      return book.save()
+      try {
+        await book.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
+      const findAuthor = await Author.findOne({ name: args.author })
+      if (!findAuthor) {
+        const author = new Author({ name: args.author, born: args.born })
+        try {
+          await author.save()
+        } catch (error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
+        }
+      }
+      return book
     },
     editAuthor: async (root, args) => {
       const author = await Author.findOne({ name: args.name })
+      if (!author)
+        throw new UserInputError('That author does not exist in the App')
       author.born = args.setBornTo
+
       return author.save()
     },
   },
