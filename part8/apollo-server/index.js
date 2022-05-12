@@ -68,7 +68,7 @@ const resolvers = {
         )
       }
       if (args.genre) {
-        return books.filter((b) => b.genres.includes(args.genre))
+        return Book.find({ genres: { $in: [args.genre] } })
       }
       if (args.author) {
         return books.filter((b) => b.author === args.author)
@@ -78,6 +78,7 @@ const resolvers = {
     allAuthors: async () => await Author.find({}),
   },
   Author: {
+    // Ex 8.14 Authors property of books is not working yet, can't fix it now.
     bookCount: (root, args) =>
       books.filter((b) => b.author === root.name).length,
   },
@@ -100,14 +101,10 @@ const resolvers = {
       // }
       return book.save()
     },
-    editAuthor: (root, args) => {
-      const author = authors.find((a) => a.name === args.name)
-      if (!author) return null
-
-      const updatedAuthor = { ...author, born: args.setBornTo }
-      authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a))
-
-      return updatedAuthor
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name })
+      author.born = args.setBornTo
+      return author.save()
     },
   },
 }
