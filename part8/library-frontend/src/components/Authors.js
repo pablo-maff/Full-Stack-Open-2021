@@ -56,7 +56,7 @@ const Authors = ({ show, token }) => {
           </tbody>
         </table>
       </div>
-      {!token ? null : 
+      {!token ? null : (
         <div>
           <h2>Set Birth Year</h2>
           <form onSubmit={submit}>
@@ -78,7 +78,7 @@ const Authors = ({ show, token }) => {
             <button type='submit'>submit</button>
           </form>
         </div>
-      }
+      )}
     </>
   )
 }
