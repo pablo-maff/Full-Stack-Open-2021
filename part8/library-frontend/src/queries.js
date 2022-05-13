@@ -23,6 +23,15 @@ export const ALL_AUTHORS = gql`
     }
   }
 `
+export const ME = gql`
+  query {
+    me {
+      username
+      favouriteGenre
+      id
+    }
+  }
+`
 
 // First define params variables and types in the createBook mutation
 // Then define the addBook function whith the object that is returning
