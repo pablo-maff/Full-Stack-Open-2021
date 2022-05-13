@@ -1,23 +1,25 @@
 import { gql } from '@apollo/client'
 
+// author need to be fixed in the backend
+// Add author here when that's done
 export const ALL_BOOKS = gql`
   query {
     allBooks {
       title
       published
-      author
       id
       genres
     }
   }
 `
+// bookCount of authors need to be fixed in the backend
+// Add bookCount here when that's done
 export const ALL_AUTHORS = gql`
   query {
     allAuthors {
       name
       id
       born
-      bookCount
     }
   }
 `
