@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 import Select from 'react-select'
 
-const Authors = ({ show }) => {
+const Authors = ({ show, token }) => {
   const [name, setName] = useState(null)
   const [setBornTo, setBorn] = useState('')
 
@@ -20,8 +20,6 @@ const Authors = ({ show }) => {
   if (result.loading) {
     return <div>loading...</div>
   }
-
-  console.log('result', result)
 
   const authors = result.data.allAuthors
 
@@ -58,27 +56,29 @@ const Authors = ({ show }) => {
           </tbody>
         </table>
       </div>
-      <div>
-        <h2>Set Birth Year</h2>
-        <form onSubmit={submit}>
-          <div>
-            name
-            <Select
-              defaultValue={name}
-              onChange={(options) => setName(options.value)}
-              options={options}
-            />
-          </div>
-          <div>
-            born
-            <input
-              value={setBornTo}
-              onChange={({ target }) => setBorn(target.value)}
-            />
-          </div>
-          <button type='submit'>submit</button>
-        </form>
-      </div>
+      {!token ? null : 
+        <div>
+          <h2>Set Birth Year</h2>
+          <form onSubmit={submit}>
+            <div>
+              name
+              <Select
+                defaultValue={name}
+                onChange={(options) => setName(options.value)}
+                options={options}
+              />
+            </div>
+            <div>
+              born
+              <input
+                value={setBornTo}
+                onChange={({ target }) => setBorn(target.value)}
+              />
+            </div>
+            <button type='submit'>submit</button>
+          </form>
+        </div>
+      }
     </>
   )
 }
