@@ -14,9 +14,10 @@ const Recommend = ({ show }) => {
     return <div>loading...</div>
   }
 
-  const favouriteGenre = me.data.me.favouriteGenre
+  const favouriteGenre = me?.data?.me?.favouriteGenre
+
   const recommendations = books.data.allBooks.filter((b) =>
-    b.genres.includes(me.data.me.favouriteGenre)
+    b.genres.includes(favouriteGenre)
   )
   return (
     <>
@@ -32,10 +33,10 @@ const Recommend = ({ show }) => {
               <th>author</th>
               <th>published</th>
             </tr>
-            {recommendations.map((b) => (
+            {recommendations?.map((b) => (
               <tr key={b.id}>
                 <td>{b.title}</td>
-                <td>{b.author}</td>
+                <td>{b.author.name}</td>
                 <td>{b.published}</td>
               </tr>
             ))}

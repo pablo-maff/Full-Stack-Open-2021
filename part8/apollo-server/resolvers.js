@@ -4,10 +4,11 @@ const Author = require('./models/author')
 const User = require('./models/user')
 const jwt = require('jsonwebtoken')
 const { PubSub } = require('graphql-subscriptions')
+const author = require('./models/author')
 const pubsub = new PubSub()
 require('dotenv').config()
 
-const JWT_SECRET = process.env.SECRET
+const SECRET = process.env.SECRET
 
 const resolvers = {
   Query: {
@@ -26,17 +27,26 @@ const resolvers = {
       if (args.author) {
         return books.filter((b) => b.author === args.author)
       }
-      return Book.find({})
+
+      return await Book.find({})
     },
-    allAuthors: async () => await Author.find({}),
+    allAuthors: async () => Author.find({}),
     me: (root, args, context) => {
       return context.currentUser
     },
   },
+  Book: {
+    author: async (root) => {
+      return Author.findById(root.author)
+    },
+  },
   Author: {
     // Ex 8.14 Authors property of books is not working yet, can't fix it now.
-    bookCount: (root, args) =>
-      books.filter((b) => b.author === root.name).length,
+    bookCount: async (message, args, { loaders }) => {
+      return await loaders.books.load(message._id)
+      // const books = await Book.find({}).populate('author')
+      // return books.filter((a) => a.author.name === root.name).length
+    },
   },
   Mutation: {
     addBook: async (root, args, { currentUser }) => {
@@ -44,23 +54,9 @@ const resolvers = {
         throw new AuthenticationError('Not authenticated')
       }
 
-      const book = new Book({
-        title: args.title,
-        // author: args.author,
-        published: args.published,
-        genres: args.genres,
-      })
-
-      try {
-        await book.save()
-      } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args,
-        })
-      }
-      const findAuthor = await Author.findOne({ name: args.author })
-      if (!findAuthor) {
-        const author = new Author({ name: args.author, born: args.born })
+      let author = await Author.findOne({ name: args.author })
+      if (!author) {
+        author = new Author({ name: args.author, born: args.born })
         try {
           await author.save()
         } catch (error) {
@@ -70,10 +66,23 @@ const resolvers = {
         }
       }
 
+      const book = new Book({
+        title: args.title,
+        published: args.published,
+        genres: args.genres,
+        author: author._id,
+      })
+
       // send notification to subscribers
       pubsub.publish('BOOK_ADDED', { bookAdded: book })
 
-      return book
+      try {
+        return book.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
     },
     editAuthor: async (root, args, { currentUser }) => {
       if (!currentUser) {
@@ -111,7 +120,7 @@ const resolvers = {
         id: user._id,
       }
 
-      return { value: jwt.sign(userForToken, JWT_SECRET) }
+      return { value: jwt.sign(userForToken, SECRET) }
     },
   },
   Subscription: {

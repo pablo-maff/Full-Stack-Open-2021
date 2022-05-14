@@ -21,9 +21,9 @@ const Authors = ({ show, token }) => {
     return <div>loading...</div>
   }
 
-  const authors = result.data.allAuthors
+  const authors = result?.data?.allAuthors
 
-  const options = authors.map((a) => ({ value: a.name, label: a.name }))
+  const options = authors?.map((a) => ({ value: a.name, label: a.name }))
 
   const submit = async (event) => {
     event.preventDefault()
@@ -46,7 +46,7 @@ const Authors = ({ show, token }) => {
               <th>born</th>
               <th>books</th>
             </tr>
-            {authors.map((a) => (
+            {authors?.map((a) => (
               <tr key={a.name}>
                 <td>{a.name}</td>
                 <td>{a.born}</td>

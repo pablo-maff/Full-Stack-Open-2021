@@ -15,7 +15,7 @@ const typeDefs = gql`
     name: String!
     id: ID!
     born: Int
-    bookCount: Int
+    bookCount: Int!
   }
 
   type Book {
@@ -27,7 +27,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    bookCount: Int
+    bookCount: Int!
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
@@ -38,6 +38,7 @@ const typeDefs = gql`
     addBook(
       title: String!
       author: String!
+      born: Int
       published: Int!
       genres: [String!]!
     ): Book

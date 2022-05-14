@@ -3,32 +3,34 @@ import { gql } from '@apollo/client'
 const BOOK_DETAILS = gql`
   fragment BookDetails on Book {
     title
+    author {
+      name
+    }
     published
     genres
     id
   }
 `
 
-// author need to be fixed in the backend
-// Add author here when that's done
 export const ALL_BOOKS = gql`
   query {
     allBooks {
       title
+      author {
+        name
+      }
       published
       id
       genres
     }
   }
 `
-// bookCount of authors need to be fixed in the backend
-// Add bookCount here when that's done
 export const ALL_AUTHORS = gql`
   query {
     allAuthors {
       name
-      id
       born
+      bookCount
     }
   }
 `
@@ -44,9 +46,6 @@ export const ME = gql`
 
 // First define params variables and types in the createBook mutation
 // Then define the addBook function whith the object that is returning
-
-// author need to be fixed in the backend
-// Add author to the query when that's done
 export const CREATE_BOOK = gql`
   mutation createBook(
     $title: String!
@@ -61,6 +60,9 @@ export const CREATE_BOOK = gql`
       genres: $genres
     ) {
       title
+      author {
+        name
+      }
       published
       genres
       id
@@ -68,8 +70,6 @@ export const CREATE_BOOK = gql`
   }
 `
 
-// bookCount of authors need to be fixed in the backend
-// Add bookCount here when that's done
 export const EDIT_AUTHOR = gql`
   mutation editAuthor($name: String!, $setBornTo: Int!) {
     editAuthor(name: $name, setBornTo: $setBornTo) {

@@ -1,7 +1,7 @@
 const { ApolloServer } = require('apollo-server-express')
 const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
-
+const DataLoader = require('dataloader')
 const { execute, subscribe } = require('graphql')
 const { SubscriptionServer } = require('subscriptions-transport-ws') // This library is deprecated. See graphql-ws
 
@@ -10,6 +10,8 @@ const http = require('http')
 
 const mongoose = require('mongoose')
 const User = require('./models/user')
+const Book = require('./models/book')
+const Author = require('./models/author')
 
 const typeDefs = require('./schema')
 const resolvers = require('./resolvers')
@@ -17,7 +19,7 @@ const resolvers = require('./resolvers')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-const JWT_SECRET = process.env.SECRET
+const SECRET = process.env.SECRET
 
 const MONGODB_URI = process.env.MONGODB_URI
 
@@ -31,6 +33,8 @@ mongoose
   .catch((error) => {
     console.log('error connecting to MongoDB', error.message)
   })
+
+mongoose.set('debug', true)
 
 // setup is now within a function
 const start = async () => {
@@ -51,15 +55,39 @@ const start = async () => {
     }
   )
 
+  const batchBooks = async (keys) => {
+    let books = await Book.find({
+      where: {
+        author: {
+          $in: keys,
+        },
+      },
+    })
+    return keys.map(
+      (key) =>
+        books.filter((book) => String(book.author) === String(key)).length
+    )
+  }
+
+  const booksLoader = new DataLoader((keys) => batchBooks(keys))
+
   const server = new ApolloServer({
     schema,
     context: async ({ req }) => {
       const auth = req ? req.headers.authorization : null
 
       if (auth && auth.toLowerCase().startsWith('bearer')) {
-        const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
+        const decodedToken = jwt.verify(auth.substring(7), SECRET)
         const currentUser = await User.findById(decodedToken.id)
         return { currentUser }
+      }
+
+      if (req) {
+        return {
+          loaders: {
+            books: booksLoader,
+          },
+        }
       }
     },
     plugins: [
