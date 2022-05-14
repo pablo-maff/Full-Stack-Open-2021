@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client'
 import { ME, ALL_BOOKS } from '../queries'
 
 const Recommend = ({ show }) => {
+  // ME returns null after using logout causing the page to crash. Probably caused by client.resetStore() method
   const me = useQuery(ME)
   const books = useQuery(ALL_BOOKS)
 

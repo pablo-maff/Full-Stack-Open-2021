@@ -1,5 +1,14 @@
 import { gql } from '@apollo/client'
 
+const BOOK_DETAILS = gql`
+  fragment BookDetails on Book {
+    title
+    published
+    genres
+    id
+  }
+`
+
 // author need to be fixed in the backend
 // Add author here when that's done
 export const ALL_BOOKS = gql`
@@ -54,6 +63,7 @@ export const CREATE_BOOK = gql`
       title
       published
       genres
+      id
     }
   }
 `
@@ -75,4 +85,13 @@ export const LOGIN = gql`
       value
     }
   }
+`
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetails
+    }
+  }
+
+  ${BOOK_DETAILS}
 `
