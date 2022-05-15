@@ -1,33 +1,38 @@
 import { useQuery } from '@apollo/client'
-import { ALL_BOOKS } from '../queries'
+import { ALL_BOOKS, BOOKS_BY_GENRE } from '../queries'
 import Select from 'react-select'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Books = ({ show }) => {
   const [genre, setGenre] = useState(null)
+  const [genresFilter, setGenresFilter] = useState(null)
 
-  const result = useQuery(ALL_BOOKS)
+  // const result = useQuery(ALL_BOOKS)
+
+  const booksByGenre = useQuery(BOOKS_BY_GENRE, {
+    variables: { genre: genre },
+  })
 
   if (!show) {
     return null
   }
 
-  if (result.loading) {
+  if (booksByGenre.loading) {
     return <div>loading...</div>
   }
-  const books = result.data.allBooks
+
+  const books = booksByGenre.data.allBooks
 
   // Use a set to only have unique values
   const uniqueGenres = new Set()
   books.map((b) => uniqueGenres.add(...b.genres))
   // To transform set into a suitable array use the spread operator
-  const options = [...uniqueGenres]
-    .map((g) => ({ value: g, label: g }))
-    .concat({ value: null, label: 'All Books' })
+  let options = [...uniqueGenres].map((g) => ({ value: g, label: g }))
 
-  const filteredBooks = genre
-    ? books.filter((b) => b.genres.includes(genre))
-    : books
+  const allBooksOption = [{ value: null, label: 'All Books' }]
+  options = allBooksOption.concat(options)
+
+  if (genresFilter === null) setGenresFilter(options)
 
   return (
     <div>
@@ -40,7 +45,7 @@ const Books = ({ show }) => {
               <th>author</th>
               <th>published</th>
             </tr>
-            {filteredBooks.map((a) => (
+            {books.map((a) => (
               <tr key={a.id}>
                 <td>{a.title}</td>
                 <td>{a.author.name}</td>
@@ -54,8 +59,8 @@ const Books = ({ show }) => {
         <h3>filter by genre</h3>
         <Select
           defaultValue={null}
-          onChange={(options) => setGenre(options.value)}
-          options={options}
+          onChange={(genresFilter) => setGenre(genresFilter.value)}
+          options={genresFilter}
         />
       </div>
     </div>

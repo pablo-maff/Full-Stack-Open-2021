@@ -44,6 +44,20 @@ export const ME = gql`
   }
 `
 
+export const BOOKS_BY_GENRE = gql`
+  query ($genre: String) {
+    allBooks(genre: $genre) {
+      title
+      published
+      author {
+        name
+      }
+      genres
+      id
+    }
+  }
+`
+
 // First define params variables and types in the createBook mutation
 // Then define the addBook function whith the object that is returning
 export const CREATE_BOOK = gql`

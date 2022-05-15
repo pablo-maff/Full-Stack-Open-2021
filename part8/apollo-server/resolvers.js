@@ -28,7 +28,7 @@ const resolvers = {
         return books.filter((b) => b.author === args.author)
       }
 
-      return await Book.find({})
+      return Book.find({})
     },
     allAuthors: async () => Author.find({}),
     me: (root, args, context) => {
@@ -41,11 +41,8 @@ const resolvers = {
     },
   },
   Author: {
-    // Ex 8.14 Authors property of books is not working yet, can't fix it now.
     bookCount: async (message, args, { loaders }) => {
-      return await loaders.books.load(message._id)
-      // const books = await Book.find({}).populate('author')
-      // return books.filter((a) => a.author.name === root.name).length
+      return loaders.books.load(message._id)
     },
   },
   Mutation: {
