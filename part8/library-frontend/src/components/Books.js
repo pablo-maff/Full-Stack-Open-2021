@@ -1,13 +1,11 @@
 import { useQuery } from '@apollo/client'
-import { ALL_BOOKS, BOOKS_BY_GENRE } from '../queries'
+import { BOOKS_BY_GENRE } from '../queries'
 import Select from 'react-select'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 const Books = ({ show }) => {
   const [genre, setGenre] = useState(null)
   const [genresFilter, setGenresFilter] = useState(null)
-
-  // const result = useQuery(ALL_BOOKS)
 
   const booksByGenre = useQuery(BOOKS_BY_GENRE, {
     variables: { genre: genre },
@@ -33,6 +31,7 @@ const Books = ({ show }) => {
   options = allBooksOption.concat(options)
 
   if (genresFilter === null) setGenresFilter(options)
+  else if (options.length > genresFilter.length) setGenresFilter(options)
 
   return (
     <div>

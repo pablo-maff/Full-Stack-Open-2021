@@ -5,7 +5,7 @@ import Books from './components/Books'
 import LoginForm from './components/LoginForm'
 import NewBook from './components/NewBook'
 import Recommend from './components/Recommend'
-import { ALL_BOOKS, BOOK_ADDED } from './queries'
+import { ALL_BOOKS, BOOKS_BY_GENRE, BOOK_ADDED } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -24,11 +24,12 @@ const App = () => {
       window.alert(`${addedBook.title} added`)
 
       // Add subscription data to cache
-      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
-        return {
+      client.cache.updateQuery(
+        { query: BOOKS_BY_GENRE, variables: { genre: null } },
+        ({ allBooks }) => ({
           allBooks: allBooks.concat(addedBook),
-        }
-      })
+        })
+      )
     },
   })
 
