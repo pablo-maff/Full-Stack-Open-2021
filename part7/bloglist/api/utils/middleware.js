@@ -2,17 +2,14 @@ const logger = require('./logger')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const Blog = require('../models/blog')
+const mongoose = require('mongoose')
 
 const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'Unknwonw endpoint' })
 }
 
 const errorHandler = (error, req, res, next) => {
-  if (error.name === 'CastError') {
-    return res.status(400).send({
-      error: 'malformatted id',
-    })
-  } else if (error.name === 'ValidationError') {
+  if (error.name === 'ValidationError') {
     return res.status(400).json({
       error: error.message,
     })
@@ -57,10 +54,21 @@ const blogExtractor = async (req, res, next) => {
   next()
 }
 
+function isValidID(req, res, next) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res
+      .status(400)
+      .send({ error: "Invalid ID" })
+  }
+
+  next()
+}
+
 module.exports = {
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
   userExtractor,
   blogExtractor,
+  isValidID
 }

@@ -1,6 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const { userExtractor, blogExtractor } = require('../utils/middleware')
+const { userExtractor, blogExtractor, isValidID } = require('../utils/middleware')
 
 blogsRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({})
@@ -9,7 +9,7 @@ blogsRouter.get('/', async (req, res) => {
   blogs ? res.status(200).json(blogs) : res.status(404).end()
 })
 
-blogsRouter.get('/:id', async (req, res) => {
+blogsRouter.get('/:id', isValidID, async (req, res) => {
   const blog = await Blog.findById(req.params.id)
     .populate('comments', { content: 1 })
     .populate('user', { username: 1, name: 1 })
@@ -41,7 +41,7 @@ blogsRouter.post('/', userExtractor, async (req, res) => {
   res.status(201).json(savedPost)
 })
 
-blogsRouter.delete('/:id', blogExtractor, async (req, res) => {
+blogsRouter.delete('/:id', [isValidID, blogExtractor], async (req, res) => {
   const authorId = req.blog.user.toString()
   const userId = req.token.id
 
@@ -54,7 +54,7 @@ blogsRouter.delete('/:id', blogExtractor, async (req, res) => {
       .send({ error: "You are not allowed to delete someone else's blogs" })
 })
 
-blogsRouter.put('/:id', async (req, res) => {
+blogsRouter.put('/:id', isValidID, async (req, res) => {
   const { likes } = req.body
 
   const updatedBlog = await Blog.findByIdAndUpdate(
@@ -65,12 +65,16 @@ blogsRouter.put('/:id', async (req, res) => {
     }
   )
 
+  if (!updatedBlog) {
+    return res
+      .status(404)
+      .send({ error: "The blog that you are trying to update no longer exists" })
+  }
+
   await updatedBlog.populate('user', { username: 1, name: 1 })
   await updatedBlog.populate('comments', { content: 1 })
 
-  updatedBlog
-    ? res.status(200).json(updatedBlog.toJSON())
-    : res.status(404).end()
+  return res.status(200).json(updatedBlog.toJSON())
 })
 
 module.exports = blogsRouter

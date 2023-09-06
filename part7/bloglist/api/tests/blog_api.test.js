@@ -66,7 +66,16 @@ describe('Adding a new blog post', () => {
     const blogs = await helper.blogsInDb()
     delete blogs.at(-1).id
     delete blogs.at(-1).user
-    expect(blogs).toContainEqual(helper.postNewBlog)
+    delete blogs.at(-1).comments
+
+    expect(blogs.at(-1)).toEqual(
+      expect.objectContaining({
+        author: helper.postNewBlog.author,
+        title: helper.postNewBlog.title,
+        likes: helper.postNewBlog.likes,
+        url: helper.postNewBlog.url,
+      })
+    )
   })
 
   test('if likes property is missing, default value is 0', async () => {
@@ -127,7 +136,7 @@ describe('Viewing a specific blog', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-    const resBlog = { ...reqBlog.body, user: reqBlog.body.user.toString() }
+    const resBlog = { ...reqBlog.body, user: reqBlog.body.user.id }
 
     expect(blogToView).toEqual(resBlog)
   })

@@ -31,7 +31,7 @@ const postNewBlog = {
 }
 
 const nonExistingId = async () => {
-  const blog = new Blog({ content: 'willremovethissoon' })
+  const blog = new Blog({ content: 'willremovethissoon', title: 'noTitle' })
   await blog.save()
   await blog.remove()
 
